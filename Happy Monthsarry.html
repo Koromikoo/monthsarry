@@ -1,0 +1,1585 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Our Monthsarry</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500&family=Pixelify+Sans:wght@400;500&display=swap">
+<style>
+/* Layout: quiet left-aligned greeting in a soft serif, flower row beneath, one calm detail panel. Flowers slowly swap between drawn and block-pixel versions. */
+:root {
+  --bg: #EDF0F2;
+  --surface: #F8F9FA;
+  --fg: #26303B;
+  --muted: #66727F;
+  --accent: #A8577A;
+  --line: #D5DBE1;
+  --glow: #E3DCE9;
+  --scrim: rgba(14, 18, 26, 0.92);
+  --on-scrim: #EEF1F5;
+  --scrim-ctl: rgba(255, 255, 255, 0.14);
+  --fade: rgba(10, 14, 22, 0.9);
+  --font-display: "Instrument Serif", "Georgia", serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121820;
+    --surface: #1B232D;
+    --fg: #E8ECF0;
+    --muted: #98A5B3;
+    --accent: #E0A3BC;
+    --line: #2C3744;
+    --glow: #231D2E;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121820;
+  --surface: #1B232D;
+  --fg: #E8ECF0;
+  --muted: #98A5B3;
+  --accent: #E0A3BC;
+  --line: #2C3744;
+  --glow: #231D2E;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 48px 72px;
+  background-image: radial-gradient(60rem 30rem at 80% -10%, var(--glow), transparent 70%);
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+main { max-width: 52rem; margin: 0 auto; display: flex; flex-direction: column; gap: 3.5rem; }
+
+.eyebrow {
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.7rem, 9.2vw, 6rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+h1 .line { display: block; white-space: nowrap; }
+h1 .name {
+  color: var(--accent);
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-style: italic;
+  cursor: pointer;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  transition: border-color 0.4s ease;
+}
+h1 .name:hover { border-color: var(--accent); }
+h1 .name:focus-visible, .flower-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 12px; }
+.hint { margin: 1.25rem 0 0; color: var(--muted); font-size: 0.9rem; }
+
+.picker { display: flex; flex-direction: column; gap: 1.5rem; text-align: center; }
+.picker h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  margin: 0;
+}
+.picker p.sub { margin: 0.25rem 0 0; color: var(--muted); }
+.flowers { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+.flower-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
+  width: 6.4rem;
+  padding: 0.8rem 0.5rem 0.7rem;
+  background: transparent;
+  color: var(--fg);
+  font: inherit; font-size: 0.9rem;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+.flower-btn:hover { background: var(--surface); }
+.flower-btn[aria-pressed="true"] { background: var(--surface); border-color: var(--line); }
+
+/* each flower holds two drawings that fade into each other */
+.art { position: relative; display: block; width: 4.4rem; aspect-ratio: 100 / 120; }
+.art .real { display: block; width: 100%; height: auto; transition: opacity 1.6s ease; }
+.art .mc {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  aspect-ratio: var(--ratio, 1);
+  opacity: 0;
+  transition: opacity 1.6s ease;
+  perspective: 30rem;
+}
+/* the block-style flower is two crossed flat planes, turning slowly, like in the game */
+.mc .tilt { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: 50% 100%; transform: rotateX(-14deg); }
+.mc .turn { position: absolute; inset: 0; transform-style: preserve-3d; animation: turn 18s linear infinite; }
+.mc .plane { position: absolute; inset: 0; }
+.mc .plane svg { display: block; width: 100%; height: 100%; }
+.mc .p1 { transform: rotateY(45deg); }
+.mc .p2 { transform: rotateY(-45deg); }
+.art .mc.photo { aspect-ratio: auto; perspective: none; display: flex; align-items: flex-end; justify-content: center; }
+.art .mc.photo img { display: block; height: 100%; width: auto; max-width: 100%; image-rendering: pixelated; }
+@keyframes turn { to { transform: rotateY(360deg); } }
+body[data-mode="mc"] .art .real { opacity: 0; }
+body[data-mode="mc"] .art .mc { opacity: 1; }
+.flower-btn .art { transform-origin: 50% 100%; animation: sway 9s ease-in-out infinite; }
+.flower-btn:nth-child(2) .art { animation-delay: -2s; }
+.flower-btn:nth-child(3) .art { animation-delay: -4s; }
+.flower-btn:nth-child(4) .art { animation-delay: -6s; }
+.flower-btn:nth-child(5) .art { animation-delay: -8s; }
+@keyframes sway { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.5deg); } }
+
+.panel { text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: clamp(1.25rem, 4vw, 2.25rem);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+.panel .art { width: clamp(5.5rem, 18vw, 8.5rem); }
+.panel .text { min-width: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.panel h3 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem, 5vw, 2.5rem); line-height: 1.1; margin: 0; }
+.panel .meaning { margin: 0; color: var(--muted); }
+.slot {
+  margin-top: 0.5rem;
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.content {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--line);
+  padding-top: 1.75rem;
+  min-width: 0;
+}
+.content h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 4.5vw, 2rem);
+  margin: 0 0 0.75rem;
+  color: var(--accent);
+}
+.notes { list-style: none; margin: 0; padding: 0; }
+.notes li {
+  display: grid;
+  grid-template-columns: minmax(9rem, 14rem) 1fr;
+  gap: 0.35rem 2rem;
+  padding: 1.1rem 0;
+  border-top: 1px solid var(--line);
+}
+.notes li:first-child { border-top: 0; padding-top: 0.4rem; }
+.notes .t { font-family: var(--font-display); font-size: 1.35rem; line-height: 1.2; }
+.notes .d { margin: 0; color: var(--muted); max-width: 40rem; }
+.letter { max-width: 38rem; }
+.letter .greet {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.7rem, 5vw, 2.3rem);
+  color: var(--accent);
+  margin: 0 0 1rem;
+}
+.letter p.body { margin: 0 0 1.1rem; font-size: 1.05rem; line-height: 1.7; }
+.letter p.body:last-child { margin-bottom: 0; }
+.qa-wrap { max-width: 40rem; }
+.qa-intro { margin: 0 0 1rem; color: var(--muted); }
+.qa { list-style: none; margin: 0; padding: 0; }
+.qa li { padding: 1.1rem 0; border-top: 1px solid var(--line); }
+.qa li:first-child { border-top: 0; padding-top: 0.4rem; }
+.qa .q { display: block; font-family: var(--font-display); font-size: 1.35rem; line-height: 1.25; margin-bottom: 0.6rem; }
+.qa input[type="text"], .qa textarea, .fallback {
+  display: block; width: 100%; box-sizing: border-box;
+  font: inherit; font-size: 1rem; line-height: 1.5; color: var(--fg);
+  background: var(--bg); border: 1px solid var(--line); border-radius: 12px;
+  padding: 0.65rem 0.8rem;
+}
+.qa textarea { min-height: 7rem; resize: vertical; }
+.fallback { margin-top: 0.9rem; resize: vertical; }
+.fallback[hidden] { display: none; }
+.qa input:focus-visible, .qa textarea:focus-visible, .fallback:focus-visible, .rate button:focus-visible, .copy-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rate { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 0.25rem; }
+.rate button { height: 2.5rem; padding: 0; font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; cursor: pointer; }
+.rate button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.copy-row { margin-top: 1.5rem; display: flex; align-items: center; flex-wrap: wrap; gap: 0.9rem; }
+.copy-btn { font: inherit; padding: 0.8rem 1.6rem; border: 0; border-radius: 999px; background: var(--accent); color: var(--bg); cursor: pointer; }
+.copy-btn:hover { filter: brightness(1.08); }
+.copy-note { color: var(--muted); font-size: 0.95rem; }
+.comfort { max-width: 38rem; }
+.comfort-card { margin: 0.5rem 0 0; padding: 1.4rem 1.5rem; min-height: 8rem; background: var(--glow); border-left: 3px solid var(--accent); border-radius: 14px; font-family: var(--font-display); font-size: clamp(1.3rem, 4vw, 1.65rem); line-height: 1.45; text-wrap: pretty; }
+.comfort-card.empty { color: var(--muted); }
+.comfort-card.swap { animation: comfort-in 0.6s ease both; }
+@keyframes comfort-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .comfort-card.swap { animation: none; } }
+.copy-btn:disabled { opacity: 0.55; cursor: default; filter: none; }
+/* nothing to see here: a chicken that lays an egg after 5 pokes */
+.nothing { margin-top: 3.5rem; padding-top: 1.75rem; border-top: 1px solid var(--line); text-align: center; }
+.nothing h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.4rem, 4.5vw, 1.9rem); margin: 0 0 1rem; color: var(--muted); }
+.coop { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+.chicken-btn { background: none; border: 0; padding: 0; cursor: pointer; line-height: 0; -webkit-tap-highlight-color: transparent; border-radius: 12px; }
+.chicken-btn img { width: 8.5rem; height: auto; image-rendering: pixelated; user-select: none; -webkit-user-drag: none; transform-origin: 50% 90%; }
+.chicken-btn:focus-visible, .pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.chicken-btn.poke img { animation: chicken-poke 0.28s ease; }
+@keyframes chicken-poke { 0% { transform: scale(1); } 35% { transform: scale(1.08, 0.92) rotate(-3deg); } 70% { transform: scale(0.97, 1.04) rotate(2deg); } 100% { transform: scale(1); } }
+.drop-zone { position: relative; width: min(100%, 22rem); display: flex; flex-direction: column; align-items: center; }
+.egg-spot { position: relative; width: min(100%, 20rem); height: 9rem; margin-top: -1.2rem; }
+.egg-slot { position: absolute; width: 3.85rem; margin-left: -1.925rem; }
+.drop { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; animation: egg-pop 0.9s cubic-bezier(.3,.7,.4,1) both; }
+@keyframes egg-pop {
+  0%   { transform: translate(var(--sx, 0px), -5.5rem) scale(0.6); opacity: 0; }
+  15%  { opacity: 1; }
+  50%  { transform: translate(0, -1rem) scale(1); }
+  72%  { transform: translate(0, 0); }
+  86%  { transform: translate(0, -0.7rem); }
+  100% { transform: translate(0, 0); }
+}
+.pick, .pick:hover, .pick:active, .pick:focus { background: transparent; box-shadow: none; }
+.pick { -webkit-appearance: none; appearance: none; background: transparent; border: 0; padding: 0.3rem; cursor: pointer; line-height: 0; -webkit-tap-highlight-color: transparent; border-radius: 12px; }
+.drop .bob { animation: item-bob 2.4s ease-in-out 0.9s infinite; }
+.drop .spin { width: 3.25rem; height: 3.25rem; animation: item-spin 6s linear infinite; transform-style: preserve-3d; }
+.drop .spin img { width: 100%; height: 100%; image-rendering: pixelated; display: block; }
+.drop .shadow { width: 2.4rem; height: 0.5rem; border-radius: 50%; background: rgba(0,0,0,0.22); margin-top: -0.1rem; animation: item-shadow 2.4s ease-in-out 0.9s infinite; }
+@keyframes item-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-0.5rem); } }
+@keyframes item-shadow { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.8); opacity: 0.7; } }
+@keyframes item-spin { to { transform: rotateY(360deg); } }
+.mc-tip { margin: 0.4rem 0 0; max-width: 21rem; padding: 0.6rem 0.9rem; text-align: center; font-family: "Pixelify Sans", "Courier New", monospace; font-size: 1.05rem; line-height: 1.35; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; background: rgba(16, 0, 16, 0.94); border: 2px solid #2a0a5e; border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(80, 0, 160, 0.45); animation: tip-in 0.5s ease both; }
+@keyframes tip-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+/* hotbar, top left of the screen */
+.hotbar { position: fixed; z-index: 50; top: calc(env(safe-area-inset-top, 0px) + 0.6rem); left: calc(env(safe-area-inset-left, 0px) + 0.6rem); display: flex; align-items: flex-start; gap: 0.6rem; pointer-events: none; }
+.mc-slot { position: relative; width: 48px; height: 48px; box-sizing: border-box; background: #8b8b8b; border: 3px solid; border-color: #373737 #fff #fff #373737; box-shadow: 0 0 0 3px #000, 0 2px 8px rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; }
+.mc-slot img { width: 32px; height: 32px; image-rendering: pixelated; }
+.mc-slot .cnt { position: absolute; right: 2px; bottom: -1px; font: 500 18px/1 "Pixelify Sans", "Courier New", monospace; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; }
+.mc-slot.pulse { animation: slot-pulse 0.35s ease; }
+@keyframes slot-pulse { 50% { transform: scale(1.15); } }
+.hotbar-hint { margin: 0; max-width: 12rem; padding: 0.35rem 0.55rem; font-family: "Pixelify Sans", "Courier New", monospace; font-size: 0.9rem; line-height: 1.25; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; background: rgba(16, 0, 16, 0.92); border: 2px solid #2a0a5e; border-radius: 3px; animation: tip-in 0.4s ease both; }
+.proj { position: fixed; z-index: 60; left: 0; top: 0; pointer-events: none; image-rendering: pixelated; will-change: transform; }
+.shard { position: fixed; z-index: 60; width: 6px; height: 6px; pointer-events: none; }
+body.has-egg { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+body.has-egg input, body.has-egg textarea { -webkit-user-select: text; user-select: text; }
+@media (prefers-reduced-motion: reduce) {
+  .chicken-btn.poke img, .drop, .drop .bob, .drop .spin, .drop .shadow, .mc-tip, .mc-slot.pulse, .hotbar-hint { animation: none; }
+}
+@media (max-width: 30rem) {
+  .panel { grid-template-columns: 1fr; gap: 1.25rem; }
+  .notes li { grid-template-columns: 1fr; }
+}
+/* the chests: each one is a folder; opened, it holds its screenshots */
+.chest { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; text-align: center; }
+.chest h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem, 6vw, 3rem); line-height: 1.1; margin: 0; text-wrap: balance; }
+.folders { display: flex; justify-content: center; align-items: flex-start; gap: clamp(1.5rem, 9vw, 3.5rem); }
+.folder { display: flex; flex-direction: column; align-items: center; gap: 0.45rem; width: min(8rem, 38vw); }
+.folder-label { font-family: var(--font-display); font-size: 1.3rem; line-height: 1.1; text-wrap: balance; }
+.folder-count { font-size: 0.8rem; color: var(--muted); }
+.chest-btn {
+  position: relative;
+  width: min(5.5rem, 26vw);
+  aspect-ratio: 1;
+  padding: 0; border: 0; border-radius: 16px;
+  background: none;
+  cursor: pointer;
+}
+.chest-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.chest-btn::before {
+  content: ""; position: absolute; inset: -30%;
+  background: radial-gradient(circle, var(--glow) 0%, transparent 62%);
+  opacity: 0; transition: opacity 0.6s ease; pointer-events: none;
+}
+.folder.open .chest-btn::before { opacity: 1; }
+.chest-btn::after {
+  content: ""; position: absolute; left: 10%; right: 10%; bottom: 3%; height: 7%;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--fg) 16%, transparent);
+  filter: blur(3px);
+}
+.art-wrap { position: absolute; inset: 0; display: block; transform-origin: 50% 90%; animation: nudge 6s ease-in-out infinite; }
+.folder:nth-child(2) .art-wrap { animation-delay: -3s; }
+.folder.open .art-wrap { animation: none; }
+.chest-btn svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; transition: opacity 0.25s ease, filter 0.25s ease; }
+.chest-btn:hover svg { filter: brightness(1.07); }
+.chest-btn .tex-open { opacity: 0; }
+.folder.open .tex-open { opacity: 1; }
+.folder.open .tex-closed { opacity: 0; }
+@keyframes nudge {
+  0%, 88%, 100% { transform: rotate(0deg); }
+  91% { transform: rotate(-2.5deg); }
+  94% { transform: rotate(2.5deg); }
+  97% { transform: rotate(-1deg); }
+}
+
+.drawers { width: 100%; }
+.drawer {
+  width: 100%;
+  display: grid; grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows 0.6s ease, visibility 0s linear 0.6s;
+}
+.drawer.open { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows 0.6s ease, visibility 0s; }
+.drawer-inner { overflow: hidden; min-height: 0; }
+.drawer-title { margin: 0 0 0.6rem; font-family: var(--font-display); font-size: 1.5rem; line-height: 1.1; text-align: center; }
+.slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+  gap: 0.5rem;
+  padding: 0.65rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+}
+.slot-btn {
+  padding: 0; margin: 0;
+  aspect-ratio: 16 / 10;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+.drawer.open .slot-btn {
+  opacity: 1; transform: none;
+  transition: opacity 0.5s ease calc(0.2s + var(--i, 0) * 18ms), transform 0.5s ease calc(0.2s + var(--i, 0) * 18ms), border-color 0.3s ease;
+}
+.drawer.open .slot-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+.slot-btn img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.slot-btn:focus-visible, .viewer button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.viewer {
+  position: fixed; inset: 0; z-index: 20;
+  background: var(--scrim);
+  color: var(--on-scrim);
+  display: flex; flex-direction: column; align-items: center; gap: 0.9rem;
+  padding-block: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-bottom, 0px));
+  padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px));
+}
+.viewer[hidden] { display: none; }
+.viewer figure { margin: 0; flex: 1 1 auto; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; }
+.frame { position: relative; width: fit-content; max-width: 100%; line-height: 0; border-radius: 12px; overflow: hidden; }
+.frame img {
+  display: block; width: auto; height: auto; max-width: 100%;
+  max-height: calc(100dvh - 7.6rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+}
+.frame img { cursor: pointer; }
+.cap {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 3rem clamp(0.9rem, 3.5vw, 1.5rem) clamp(0.8rem, 2.5vw, 1.2rem);
+  background: linear-gradient(to top, var(--fade) 45%, transparent);
+  line-height: 1.45; text-align: left;
+  color: var(--on-scrim);
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.frame.hide-note .cap { opacity: 0; }
+.cap-text { margin: 0; font-size: clamp(0.95rem, 2.6vw, 1.15rem); overflow-wrap: anywhere; }
+.viewer .bar { display: flex; align-items: center; gap: 0.6rem; font-variant-numeric: tabular-nums; }
+.viewer .count { min-width: 4.5rem; text-align: center; font-size: 0.9rem; }
+.viewer button {
+  font: inherit; font-size: 1.1rem; line-height: 1;
+  width: 2.6rem; height: 2.6rem;
+  border: 0; border-radius: 50%;
+  background: var(--scrim-ctl); color: var(--on-scrim);
+  cursor: pointer;
+}
+.viewer button:hover { background: var(--accent); color: var(--bg); }
+
+/* Scrolls (pixel style) */
+.scrolls { --paper: #F1E4C3; --paper-hi: #FBF3DC; --paper-edge: #C9A96B; --paper-dark: #A8864A; --ink: #4A3320; --px: 6px; display: flex; flex-direction: column; align-items: center; gap: 1.25rem; text-align: center; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .scrolls { --paper: #4A3F5C; --paper-hi: #5A4E70; --paper-edge: #2F2740; --paper-dark: #241D33; --ink: #F1EAF9; } }
+:root[data-theme="dark"] .scrolls { --paper: #4A3F5C; --paper-hi: #5A4E70; --paper-edge: #2F2740; --paper-dark: #241D33; --ink: #F1EAF9; }
+.scrolls h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem, 6vw, 3rem); line-height: 1.1; margin: 0; }
+.scrolls p.sub { margin: 0.25rem 0 0; color: var(--muted); }
+.scroll-list { display: flex; flex-direction: column; gap: 1.75rem; width: 100%; max-width: 26rem; }
+.scroll { --rib: #8E5BC4; --rib-dark: #6F3FA6; --rib-hi: #B58CE0; display: block; width: 100%; background: none; border: 0; padding: 0; font: inherit; color: var(--ink); cursor: pointer; text-align: center; image-rendering: pixelated; }
+.scroll .roll, .scroll .paper { filter: drop-shadow(0 6px 0 rgba(30,15,50,.22)); }
+.scroll:nth-child(1) { --rib: #C7A6EA; --rib-dark: #9A72C9; --rib-hi: #E2CEF6; }
+.scroll:nth-child(2) { --rib: #8E5BC4; --rib-dark: #623A98; --rib-hi: #B58CE0; }
+.scroll:nth-child(3) { --rib: #4F2A82; --rib-dark: #2F1752; --rib-hi: #7A52B0; }
+.scroll:focus-visible { outline: 3px solid var(--accent); outline-offset: 6px; }
+.roll, .paper > div { clip-path: polygon(0 var(--px), var(--px) var(--px), var(--px) 0, calc(100% - var(--px)) 0, calc(100% - var(--px)) var(--px), 100% var(--px), 100% calc(100% - var(--px)), calc(100% - var(--px)) calc(100% - var(--px)), calc(100% - var(--px)) 100%, var(--px) 100%, var(--px) calc(100% - var(--px)), 0 calc(100% - var(--px))); }
+.paper > div { clip-path: none; }
+.roll { position: relative; display: flex; align-items: center; justify-content: center; height: 4.2rem;
+  background: linear-gradient(180deg, var(--paper-dark) 0 var(--px), var(--paper-edge) var(--px) calc(var(--px)*2), var(--paper) calc(var(--px)*2) calc(var(--px)*3), var(--paper-hi) calc(var(--px)*3) calc(var(--px)*4), var(--paper) calc(var(--px)*4) calc(100% - var(--px)*3), var(--paper-edge) calc(100% - var(--px)*3) calc(100% - var(--px)), var(--paper-dark) calc(100% - var(--px)) 100%); }
+.roll .who { font-family: "Pixelify Sans", var(--font-display), monospace; font-weight: 500; font-size: 1.5rem; line-height: 1; color: var(--ink); position: relative; z-index: 1; padding-inline: 5.5rem; }
+.roll::before, .roll::after { content: ""; position: absolute; top: 0; bottom: 0; width: 2.4rem; background: linear-gradient(90deg, var(--rib-dark) 0 6px, var(--rib) 6px 12px, var(--rib-hi) 12px 18px, var(--rib) 18px calc(100% - 6px), var(--rib-dark) calc(100% - 6px) 100%); }
+.roll::before { left: 3.2rem; }
+.roll::after { right: 3.2rem; }
+.roll .bow { position: absolute; left: 0.8rem; top: 50%; width: 3.3rem; height: 2.4rem; transform: translateY(-50%); z-index: 2; }
+.roll .bow .L { fill: var(--rib); }
+.roll .bow .D { fill: var(--rib-dark); }
+.roll .bow.r { left: auto; right: 0.8rem; transform: translateY(-50%) scaleX(-1); }
+.paper { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .75s cubic-bezier(.22,.61,.36,1); }
+.scroll[aria-expanded="true"] .paper { grid-template-rows: 1fr; }
+.paper > div { overflow: hidden; }
+.sheet { margin-inline: 1.1rem; background: linear-gradient(90deg, var(--paper-dark) 0 var(--px), var(--paper-edge) var(--px) calc(var(--px)*2), var(--paper) calc(var(--px)*2) calc(100% - var(--px)*2), var(--paper-edge) calc(100% - var(--px)*2) calc(100% - var(--px)), var(--paper-dark) calc(100% - var(--px)) 100%); }
+.poem { margin: 0; padding: 1.4rem 1.6rem; font-family: "Pixelify Sans", var(--font-body), monospace; font-size: 1.05rem; line-height: 1.6; opacity: 0; transition: opacity .45s ease .25s; }
+.scroll[aria-expanded="true"] .poem { opacity: 1; }
+.poem span { display: block; }
+@media (max-width: 480px) { .poem { font-size: .95rem; padding-inline: 1.2rem; } }
+.scroll .roll.bottom { filter: none; }
+.scroll .roll.bottom::before, .scroll .roll.bottom::after { display: none; }
+.tap { font-family: "Pixelify Sans", var(--font-body), monospace; font-size: .85rem; color: var(--muted); margin-top: .5rem; display: block; }
+.scroll[aria-expanded="true"] .tap { display: none; }
+@media (prefers-reduced-motion: reduce) { .paper, .poem { transition: none; } }
+/* parchment scrolls with one purple band across the middle, no bows */
+.scroll .roll .who { display: none; }
+.scroll .name-tag-unused { display: block; font-family: "Pixelify Sans", var(--font-body), monospace; font-weight: 500; font-size: 1.35rem; line-height: 1; color: var(--fg); margin-bottom: .7rem; }
+.scroll .roll { height: 3.6rem; }
+.scroll[hidden] { display: none; }
+.scroll .roll::after { display: none; }
+.scroll .roll::before, .scroll .roll.bottom::before { display: block; left: calc(50% - 1.2rem); width: 2.4rem; }
+.scroll .roll.bottom { height: 3.6rem; }
+/* plain parchment: solid rolls with no stripes, same colour in light and dark */
+.scrolls, :root[data-theme="dark"] .scrolls { --paper: #E8D5A3; --paper-hi: #F4E8C8; --paper-edge: #D2BA82; --paper-dark: #B89B5E; --ink: #4A3320; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .scrolls { --paper: #E8D5A3; --paper-hi: #F4E8C8; --paper-edge: #D2BA82; --paper-dark: #B89B5E; --ink: #4A3320; } }
+.scroll .roll { background: var(--paper); }
+.scroll .sheet { background: linear-gradient(90deg, var(--paper-edge) 0 var(--px), var(--paper-hi) var(--px) calc(100% - var(--px)), var(--paper-edge) calc(100% - var(--px)) 100%); }
+.scroll .poem { color: var(--ink); }
+/* simple pixel shading, same style as the band */
+.scroll .roll { background: linear-gradient(180deg, var(--paper-dark) 0 var(--px), var(--paper) var(--px) calc(var(--px)*2), var(--paper-hi) calc(var(--px)*2) calc(var(--px)*3), var(--paper) calc(var(--px)*3) calc(100% - var(--px)), var(--paper-dark) calc(100% - var(--px)) 100%); }
+.scroll .sheet { background: linear-gradient(90deg, var(--paper-dark) 0 var(--px), var(--paper) var(--px) calc(var(--px)*2), var(--paper-hi) calc(var(--px)*2) calc(100% - var(--px)*2), var(--paper) calc(100% - var(--px)*2) calc(100% - var(--px)), var(--paper-dark) calc(100% - var(--px)) 100%); }
+</style>
+
+<main>
+  <header>
+    <div class="eyebrow">for you</div>
+    <h1><span class="line">happy monthsarry,</span><span class="line"><button class="name" id="name" type="button" aria-label="Change the name"></button></span></h1>
+    <p class="hint">Tap the name to see who else you are today.</p>
+  </header>
+
+  <section class="scrolls" aria-label="A poem for today's name">
+    <div class="scroll-list">
+      <button class="scroll" type="button" data-name="erich" aria-expanded="false" aria-label="Unroll the scroll for Erich" hidden>
+        <div class="roll top"><span class="who">Erich</span></div>
+        <div class="paper"><div><div class="sheet"><p class="poem"><span>Erich, beneath the stars, I think of you,</span><span>While endless oceans hold their shades of blue,</span><span>The moonlight dances softly on the tide,</span><span>And all my wandering thoughts drift to your side</span></p></div><div class="roll bottom"></div></div></div>
+        <span class="tap">tap to unroll</span>
+      </button>
+      <button class="scroll" type="button" data-name="ja" aria-expanded="false" aria-label="Unroll the scroll for Ja" hidden>
+        <div class="roll top"><span class="who">Ja</span></div>
+        <div class="paper"><div><div class="sheet"><p class="poem"><span>Ja, if I could sail beyond the blue,</span><span>I'd cross a thousand seas to get to you,</span><span>Where stars descend and meet the ocean floor,</span><span>I'd find a thousand reasons to love you more</span></p></div><div class="roll bottom"></div></div></div>
+        <span class="tap">tap to unroll</span>
+      </button>
+      <button class="scroll" type="button" data-name="clairo" aria-expanded="false" aria-label="Unroll the scroll for Clairo" hidden>
+        <div class="roll top"><span class="who">Clairo</span></div>
+        <div class="paper"><div><div class="sheet"><p class="poem"><span>Clairo, if the stars could hear me speak,</span><span>I'd tell them how your love makes me feel complete,</span><span>And if the sea could hold my every thought,</span><span>It'd keep the sweetest memories we've brought</span></p></div><div class="roll bottom"></div></div></div>
+        <span class="tap">tap to unroll</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="chest" id="chest" aria-labelledby="chest-title">
+    <h2 id="chest-title">our time together</h2>
+    <div class="folders" id="folders"></div>
+    <div class="drawers" id="drawers"></div>
+  </section>
+
+  <div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="Screenshot viewer" hidden>
+    <figure>
+      <div class="frame" id="v-frame">
+        <img id="viewer-img" alt="">
+        <div class="cap" id="v-cap" hidden><p class="cap-text" id="v-text"></p></div>
+      </div>
+    </figure>
+    <div class="bar">
+      <button type="button" id="v-prev" aria-label="Previous screenshot">&#8249;</button>
+      <span class="count" id="v-count"></span>
+      <button type="button" id="v-next" aria-label="Next screenshot">&#8250;</button>
+      <button type="button" id="v-close" aria-label="Close">&#215;</button>
+    </div>
+  </div>
+
+  <section class="picker" aria-labelledby="pick-title">
+    <div>
+      <h2 id="pick-title">pick a flower</h2>
+      <p class="sub">Each one opens something different.</p>
+    </div>
+    <div class="flowers" id="flowers"></div>
+    <div class="panel" id="panel" aria-live="polite">
+      <div id="panel-art"></div>
+      <div class="text">
+        <h3 id="panel-title">Which one?</h3>
+        <p class="meaning" id="panel-meaning">Choose a flower above and its surprise shows up here.</p>
+        <div class="slot" id="panel-slot" hidden></div>
+      </div>
+      <div class="content" id="panel-content" hidden></div>
+    </div>
+  </section>
+
+  <section class="nothing" aria-labelledby="nothing-title">
+    <h2 id="nothing-title">nothing to see here</h2>
+    <div class="coop">
+      <button class="chicken-btn" id="chicken" type="button" aria-label="Chicken. Tap it.">
+        <img src="img/chicken.png" alt="A white Minecraft chicken" width="318" height="382" draggable="false">
+      </button>
+      <div class="drop-zone" id="drop-zone" role="status" aria-live="polite"><div class="egg-spot" id="egg-spot"></div></div>
+    </div>
+  </section>
+</main>
+
+<div class="hotbar" id="hotbar" hidden>
+  <div class="mc-slot" id="mc-slot" role="img" aria-label="Hotbar slot"><img id="slot-img" alt="" hidden><span class="cnt" id="slot-cnt" hidden>1</span></div>
+  <p class="hotbar-hint" id="hotbar-hint" hidden>hold anywhere on the screen to throw it (right-click on a computer)</p>
+</div>
+
+<script>
+(function () {
+
+  document.querySelectorAll(".scroll").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var on = b.getAttribute("aria-expanded") !== "true";
+      b.setAttribute("aria-expanded", on ? "true" : "false");
+      b.setAttribute("aria-label", (on ? "Roll up" : "Unroll") + " the scroll for " + b.querySelector(".who").textContent);
+    });
+  });
+  var names = ["ja", "clairo", "erich"];
+  var nameEl = document.getElementById("name");
+  var current = -1;
+  function pickName() {
+    var next;
+    do { next = Math.floor(Math.random() * names.length); } while (next === current && names.length > 1);
+    current = next;
+    nameEl.textContent = names[current];
+    document.querySelectorAll(".scroll").forEach(function (sc) {
+      var on = sc.getAttribute("data-name") === names[current];
+      sc.hidden = !on;
+      if (!on) { sc.setAttribute("aria-expanded", "false"); }
+    });
+  }
+  pickName();
+  nameEl.addEventListener("click", pickName);
+
+  /* ---------- drawn versions ---------- */
+  var STEM = "#3E8E5A";
+  function stem(y0) {
+    return '<path d="M50 ' + y0 + ' C47 ' + (y0 + 25) + ' 53 ' + (y0 + 45) + ' 50 116" stroke="' + STEM + '" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+      '<ellipse cx="39" cy="94" rx="9" ry="4" fill="' + STEM + '" transform="rotate(-35 39 94)"/>' +
+      '<ellipse cx="61" cy="102" rx="9" ry="4" fill="' + STEM + '" transform="rotate(35 61 102)"/>';
+  }
+  function ring(n, rx, ry, d, fill, rot0, stroke) {
+    var s = "";
+    for (var i = 0; i < n; i++) {
+      var a = (rot0 || 0) + (i * 360) / n;
+      s += '<ellipse cx="50" cy="' + (42 - d) + '" rx="' + rx + '" ry="' + ry + '" fill="' + fill + '" transform="rotate(' + a + ' 50 42)"' + (stroke || "") + "/>";
+    }
+    return s;
+  }
+  function svg(inner) {
+    return '<svg class="real" viewBox="0 0 100 120" aria-hidden="true" focusable="false">' + inner + "</svg>";
+  }
+
+  /* ---------- block-pixel versions (16 x 16) ---------- */
+  var GREEN = { g: "#5DAE48", G: "#3A7A2E" };
+  function pal(extra) { var o = {}, k; for (k in GREEN) o[k] = GREEN[k]; for (k in extra) o[k] = extra[k]; return o; }
+  function px(rows, p) {
+    var out = "";
+    rows.forEach(function (row, y) {
+      var x = 0;
+      while (x < 16) {
+        var c = row.charAt(x);
+        if (c === ".") { x++; continue; }
+        var x2 = x;
+        while (x2 < 16 && row.charAt(x2) === c) x2++;
+        out += '<rect x="' + x + '" y="' + y + '" width="' + (x2 - x) + '" height="1" fill="' + p[c] + '"/>';
+        x = x2;
+      }
+    });
+    var tex = '<svg viewBox="0 0 16 ' + rows.length + '" preserveAspectRatio="none" shape-rendering="crispEdges" aria-hidden="true" focusable="false">' + out + "</svg>";
+    return '<span class="mc" style="--ratio:' + (16 / rows.length) + '"><span class="tilt"><span class="turn"><span class="plane p1">' + tex + '</span><span class="plane p2">' + tex + "</span></span></span></span>";
+  }
+
+  var poppy = px([
+    "................",
+    "................",
+    "......RRRR......",
+    ".....RrrrrR.....",
+    "....RrrrrrrR....",
+    "....RrrkkrrR....",
+    "....RrrkkrrR....",
+    ".....RrrrrR.....",
+    "......RRRR......",
+    ".......gg.......",
+    ".......gG.......",
+    "......ggG.......",
+    ".....gggG.......",
+    ".......gG.......",
+    ".......gG.......",
+    ".......GG......."
+  ], pal({ r: "#D7263D", R: "#8E1325", k: "#2A1A1A" }));
+
+  var tulipPx = px([
+    "................",
+    "................",
+    "....pp.pp.pp....",
+    "....pppppppp....",
+    "....pPppppPp....",
+    ".....pppppp.....",
+    ".....pPppPp.....",
+    "......pppp......",
+    ".......gg.......",
+    ".......gG.......",
+    "....gg.gG.gg....",
+    ".....ggGG.......",
+    ".......gG.......",
+    ".......gG.......",
+    ".......gG.......",
+    ".......GG......."
+  ], pal({ p: "#F28FB1", P: "#D96693" }));
+
+  var sunflowerPx = px([
+    "....y.yyyy.y....",
+    ".....yyyyyy.....",
+    "...yyyBBBByyy...",
+    "..yyyBbbbbByyy..",
+    "..yyyBbbbbByyy..",
+    "...yyyBBBByyy...",
+    ".....yyyyyy.....",
+    "....y.yyyy.y....",
+    ".......gG.......",
+    ".......gG......."
+  ], pal({ y: "#F7B500", B: "#4A2C14", b: "#7A4A1E" }));
+
+  var daisyPx = px([
+    "................",
+    "................",
+    ".....w.ww.w.....",
+    "....wwwwwwww....",
+    "...vwwyyyywwv...",
+    "..vwwwyyyywwwv..",
+    "...vwwyyyywwv...",
+    "....wwwwwwww....",
+    ".....w.ww.w.....",
+    ".......gG.......",
+    "....gg.gG.......",
+    ".....ggGG.gg....",
+    ".......gG.......",
+    ".......gG.......",
+    ".......gG.......",
+    ".......GG......."
+  ], pal({ w: "#FFFFFF", v: "#CFC6E3", y: "#F6C026" }));
+
+  var alliumPx = px([
+    "................",
+    "......vvvv......",
+    ".....vVvvVv.....",
+    "....vvVvvVvv....",
+    "....VvvvvvvV....",
+    "....vvVvvVvv....",
+    ".....vVvvVv.....",
+    "......vvvv......",
+    ".......gG.......",
+    ".......gG.......",
+    ".......gG.......",
+    "....gg.gG.......",
+    ".....ggGG.......",
+    ".......gG.......",
+    ".......gG.......",
+    ".......GG......."
+  ], pal({ v: "#B07CE0", V: "#8A52C4" }));
+
+  var IMG = {
+    poppy: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEsAAACFCAYAAAATrAUuAAAFA0lEQVR42u3csU4bQRAA0Dl7RAoUkABRpMGKbEsgK7KEKFLSuElHSc8npMgX5CPSU9LR0KRMpDQIIZBshKChAiSIKGLFXKpFtmNzu3uzuzO7vg6EjrvnvZmdnT0DRHZ8e/8ud3VunCElhOUDSTyWTySxWCGQxGHdtVv5weM92fm+N9ZzAIDt3nkWDdZdu0U6khRSVCOLExJbLI5I7LA4I1lh3bVb+fLxacYZaWdhCeqNxZxFNlQ3R41GgcR26sAFzQcSWcwKheYTiTzA+0ILgaSOCnWAvWu3cheZ6ODxnhzqYvBghqVu0EXqpkTbWVgCqnLnYvBgDPXfY+jiUbKpwYpGmO3jaANUGLNiQyuLpBXgpaNRIRllQ+p45qIcGUajRhoJ8LrHydMATp4G5FmOcp2K8lylsCShscFKFa1CcZJU0EjXs6jBys6rio69y5vM+8gaPj7MV518qpTlzt7lTWYKRTqyXCFNK6RtHlEbIFIsX0hl0MoilcYKhWSCRoVkjcUF6TU0aiSrAE8NdfjchXp1kRzNxXpasFbY4XN35GcFRlnTURfs3rHGkcYP7mjIAUkKGi4fn2YulmBskLijZS7Wrb7+Ptf+20+VJnmCMSm7rLccqRVRWzQXtSH7QtoULXYkrQBfhJYKklE2HEdLDclq6kCN9OXtuqgRatTdobophTSe5ajOr6Ya1KUU+myBjSNNmxpwRUMOSFLQkBMSdzTkiOR6acgWDSmhXC8MUnd6TGtOlNSs8NEec4YVeonZNxpKblb4RsOQSJurfZhbyeHH2Rv2O2iCrcFvrvZHfv648QcAgAxNdXeo303EkEjjB3c05IAkBQ05IXFHQ45I09A+/4SgaOz3Z7mMQaZtfpSA5CvbOcUKvcLpGw1jaHn5QsOY+oKuthqByZaj5ePTjPo9wqujbnZ11M3qW1Wob1UBYukbUiNN+r0Cu/g1kNmR9oEkCQ25IElAQ25InNEq1FDbvfOMCmoSWhSvo1Du3Yxir0OqSKWxUkKyxkoRqbnbyI2xUoNSSNF9T6lLpBmWAdIMywDpBavWaeYuJpExIY2MrFqnmVOWKLEhTXwMY0ezRXo1ZsWGVhZJK8BLR6NCMsqG0tCokQAAuvu9DG0uorvfSyZ7Dt8rlvnkYkabdG9IMdxjQnvtXpAyRkhG07l2dBFYJaGZXCuqDKcyXoqB23jqkApamVGP01pYsaFRhAYs6vtJR6OMn6jbLJWG5iLJVEw6zP1b+iR3fU375XC1TjN3lY2Npw4KbG4lJwdbW3suhQRc+4Zc0HyGh9KT0lBoIWIo2QzeF1rIREPe3XGZBEJnZFIsylEFMe6iSQGJBCsVpFJYqSFZYaWKZNXdAaDHejr7CwAA8xvIfhESucyOJaAhl9mxBDTkgiQBzWitSjfA928z7e617v+e38AXQKrrNEXLTEaTzkWMlztFaC5Gs2nW1kVD1zWhhH0Suo8n+iqcY0BD36sLktGMY5aLJZjQMUs3pgVvWMyt5M5ujnKkNXcbOfp6b1B3NFB9IAqMcmMbhkaShIZckCSgITckzmgV9f0KwOzdaB8ZzjQRIHck8LQnQmekYapINmiYOpIJGs6Q9NEqIaGujroZ9826w4nAyYUW1ZvT0IuCrO70wdXo9/oma9FNuChRxGGZftJc0ZATEnc0UZlNd+3NVcyqSMKiLs2ixgqNJhKLy0gTfdQ6zdxlV/0foIafNLa+3nMAAAAASUVORK5CYII=",
+    sunflower: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFYAAACWCAYAAABEvn9DAAAD+UlEQVR42u3dz0sUYRzH8Wf0KUoJKkMR7LbQCoWknT12WA+dov+gc949et8/IggiCLp46NilQ1gURQpCUUIpmoVsia1NBxkTf+T32f0+zzM/3p/jMs7OvObxmWeeH7OJ8ZTW0yupdNu+8brqd/98uSDetv/mYuLj/HsMMcACS4AFFlgCLLDAEmCBBZbsxbkDIl27JepcSVdX5QcxOGi096n93cmlJwkllqoAWAIssMASYIEFlgALbJX6CqQTLM6OXBTt+NfyN/FBtD//UT0pe1leXrTPJ5sAQomlKgCWAAsssARYYIElwAILLNkfazytXGk/XxNv++njOdF2q+vfRdvdcDjOZFw2YaNPOLHDmEVKLFUBsARYYIEl+5tbjWY9hYESCyywBFhgyb9OGGl8rFyRdq4MDpwX7nFT/XwScScMJZaqAFgCLLDAEmCBBZYAC2w5+gqkrwaVrjJxWbkin2Cxqf7dxsOrUymxPquCuemFBAZPdSy43LyABZYACywBFlhgCbAmJ685HZqx6dd7U6ZMrzmVZvjBC7My204osVQFwBJgCwbrUnkbhmZkqfoiENdCZQENXGIBVYYFVBkWUFYm0o6lKnDI1P3FQ58tvd059NmrOw7vcFU+KZd31/r6wV/bzR8fBUq6gAVUGRZQbl7AAkuALS3sj+EPtAoAzTEsoMqwgCrDSkCvP5T9fkztaq8x7zZE286vL4m2mxioRZ/+b2OW0N391dRPSnoBosNmV39oxqbUyQqw2v9OVaqTLaABYAH1sIBOE3Vltp1oo86vL5nJsVG1/TWa9dTneJ/VBvV9h89wn71+3zFoYZ68QoAejCtw6NFoWzRQV+BYw/u2qKAnAceeL2GLDnoccGv5dzU7uldm20mZ59vavM8zBRbQsLBVnV7vrY6dGKipok6OjZqdDd1r5LPP1muJzZo83ZzAwcfYDLf3QppL0KB1bCfAJ/ULdAIcclQhaKtAAuza0SIBjjFME7y5dRxwtz1XRwHHHPeyJmIazXraP3JKdZ8ZcOzBxNJOMfLd31r5uVuxgCszKS40cOVmG4YCTkLc/f8Xl5uXy5PXVms7Sts2O2evrYLsoLstIdqPsiEKUZDmVqfARQSN0o6VAhcZNOoDwnHAZQDNxZPX3PRCcvvRtbRMoLlobjWadW+oWnf7TptntghXP0arpNtjtGUE7QZY6xhtmUFdgLWPMfqT15n+016++/HdN0nMC95TpFK61doWP6rGHqopZCeMNjCwBQIuRbdhHoFL1R/rE9j17SI9eWj++ADWBO3klS22TKAxS2guug3LDBqlo7sKoEFgqwhqzO70f1tV1L0F11/8rKewpmLRWsF+0gKVv5G41CGfHz57AAAAAElFTkSuQmCC",
+    daisy: "data:image/png;base64,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",
+    tulip: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFYAAACeCAYAAACo7f0uAAAWc0lEQVR42u2da4xdV3XHf+dx78ydO+/xI3Gc1KlSXopoK6dVZVHSQJsWPkDVMiNVCpVKhU0FiUSiljwoHkSAQB+oJBGNoa36UopHoKAiBWhTJymQBjHQBGgbbAc/xm977njmvu85Z/fDWvvm7uM7nnGYscf2OV+O7+vcM96/u/baa/3X2h4X6TDGBJ2PPc+LuYIPn+xYlcO7VF98pROcEbtKR7iKRPpKYgJQqVTeBpAkSZ8+/6WLQbAxxktd12TEZsR2PSyBCUBfX98v6+NJgHK5/JQS9TEl6ZluhP20NnxqagqAiYmJOLOxGbGLH9PT087jcrmcAPT39wNQKBTerDb3aX39PwHm5+f/WD/yfDdbvVxCrY3+uz17evWcA/iD226rZ8RmxJ57bN261R1B33dm/UajEevzMUCxWPxVfem3OolN2+ous73X+frExIQB+P6BA9sA8j09n9fXpzptvDEmVLKjjNiM2OV7DUnims5qtZqcz1afs3RU2/vi4cO3AvxgZuajAANDQ9sAxvr7cwCHjh83qet6mY3NiF1R/3cpUg3AD48ceQJgeHT0nQBxHBuASrncAMjlcrksVpARu6qHSXkXgc7iUSepZ4wZBJhfWHgLQHlhAYAojmN9XwAQBAEZsRmxrFpM2BhTSL3eStneCOB/X3rJAIwMDUUAYRjaiznvs0eSJF5GbEbsCuDqeSFArVYzahM/pI9/RWMIOwEGBgae7fxcsacnWMPzREbsFe8VeJ7n6Rn1P9+s56d1RSbERtH9AN87evRFgJ5Cgc7PZcRmxF707C0A9Xo90egXAL29vTZ++02An9+8eQ/AoXI57nR+Lfnm4nkzJiP2Kl95dY3f1mq1uHMlVSgUbgMIKhU1vdFqCyXk0tv1/2xX27/ObGxG7HkI7rDBsZMTW3lYuxO6S1d072EAgL+l3M3WZsRe7cSmp2IbvbL+a6IkeyvngppOUofuZQQg7/v36PfeAXDyzviNADzMfOctZsRmxLqGrINcNHxln1g8uLu8Qy70QUYBNhT8u/R7PgDg93tjAHHNzGdeQUbs4oRaAnwlsqGERpIwIKfx2FifT2d/Fz3GNX47RQwwei+3A+SC4AkAr0AvQNKQt8dlY5bzY8iIvWpiBakRD5TQlhI412wCcKZaBWB6714ANgwPA3DdunUA9Ghy1l8q6jXS/qoYICz62wD8vFcASOZNTV/vAfBDCV4kkWYkZjNir0xiF7N51v9UEAj0XNe1/0JDjNtZPUf6fvu5lr5v/7FjABybFYSuHR0F4ObBQTpzYkseNSHXZs4Mnn5QtGJRFDs/Lf2ac8DNiL3SbKyNs/YoSSWNUp3Ss6c2sqFEWlsZWpv7ij9rAPJh6DkEHz0KQFXJzqV+MdOL31jQ6SlHsRs1Wz8mv4Dr142Jbc/J3/HPD+9zSM6IvdyJtYTao9ES5l48fFjOhw4BsHFMSHjt5s1dhVztmICS6yupUbPZUrJCgLwSX1cv4sjp06krKbOb2l/RAmg2I/kF9Mr9rhuWINYNG8TbWD8qj42qFvYdPZx5BVdkDUJVyTmus/szL7wgk7A+j5LYoxkCLzX7W28h1NcrqkMwSVIGKA4M9AM06nWxta1WpOTk1AY79/PcV58LAMbfIKRaufeN16wvAGy4TmzpSNivOTS5jzjWlZ2eR1G3IOUXZMRedsSmHj/xve8BkC8WHf+zkM9bW5h0rvU9NcodttIAzJw54wEcPn58AaBaq71Rbfa7NSd2N8DA4OCA2mAb9XLqvLawJQL41sxNbwK4/dPBRwH6R3K3Su1CYMR2J6EQm4hSJwxSUbTZzMZeGV5BysbaLOqgEthUnWucJC2AQJXXfX19qI0E4ODJkwAcPXNGno9jxyafLpVKAJN33PEgwCe+/OXPiQ2M36dVMw8C9A8UA4Br7uQNAN8ZmPo8QKE3v01WhnJBa0Pj2Cpz6Fx4ZUqYq8mPNU7+X/3PgcHBHMDc7OwhgFOzszNK6DaAM6VSovFWDyCnNjlqiTdx7caNnhLsAdynRs/zvE9oFvczAH/4N7/3OMAtr/+5nfK6EBrV5SdgYo1ZFHKBI3MxmXbrKiE2VZkYKmlDGg6qHjpUApg7ffoLADtuv/0BgEeffHInwMi6ddsAevI9YlSNzM5JEtmok6zgTjTtUswoYj7A+O7xHiW3CvD2z7zu++KV5N8B0FiIGgBe4PWuUK4sI/ayJvbxr37VGfS42awAHDl48FGAuYMH7wN48vDhmnNDObFxflsvEDl52YHckPi1iWQQnp39Ct2SEC+XXo5cFaPvOWEqX2IEJkl/WKNhusKLjLvSyoi9Uol9enLSIWa4VPoswMTERNSZv9+9e3cB4GmtckmMzNKJktMbDjjp/h+e+iYAT+3/JwCef2o6pZQRJLdOuzY+iVuy5k/yzmwf9sr7iyPy/MHSKbHdByIbO5AVYz503Vm9wGxG7BXqx05MTDQBHvvud3MA27duNQC7pqcdsvvDUU9IlRXYC6e/JtGwA0LoS6UX3OjSTakV+21iO6e3TDtxVs+XKnFLqF+QPz0oaGYiJ+f4tFx334ys+E7NnRV/eWwEgBs2Srw4nwuz6NZaIdbvqmVaoWPHLbe0AHbo4+2PbXdef+rA3wMws/9HYkN/vEdzXvJ6X6/EGhIRG1Ivttwkwx7NsnqqY30/bwaoFKpvAxgbk19CsxGJV2BDD4mrBctrLqulWdl9M8cBODZXAmBjUXQMZ3/SymzspSbWIXT7Y1tzALu2T9t05YoWpOya3uU8/pcfPQJAYUgJzWlGQRmws7kxokTxjXu/6+7jVoDw/nASIMrHtwKUKw0jKz416QOyQgvU5np+d01Om2CN6zab8vmXKycAKNFdwJsRu4rE+p2kvuvx122TNXRzBmDXxLSkT3fIWKw2wcO94k8Goeb11WQmCmaHcruhObI3AWy4j7tltvfe4ii9q2pFtc9GHEp/rlZdbj/o0VzaWOjktFqSrEXd1/bPIk1wqsg8s7GrTuz2x6SDxa4d0wlAfjB/u6zte3ZKlOjmD8tb5z6nBM+uJsGWTLuCailwvqIy1isrsU19EibbWz7yZXFW4zxAUpcPtBXfvhd0NX6KYCyml4Wjkj0ezktO7tr1YuTPzC2o1+DGEJIl/syM2IvlFTTLslYvjPXIiLa8SXl+5G6Ad31x+GGxNXOfXQ2Cm5phyCeqROmTXojXD24AYKwwqFGn2AeIZ8VmJrGJO+vBLPFLeeHWG7AruaGi+LkbrhvQnFpZc28SQ5gty2ObcRglUxteYj9WlzRGZ8XWQiRr7dAbAegZyO0EqC+M3LkSBNtEg41RbRkSjdSGDbKyGUr6nduL1OZGSezWe/neBQVI2yutwHVArVdgBdtjQ/L9o4NFRxX5k6NC8N7/ns9s7KUlNsQp8TNG36ME1+dbr5bgrsdWtiqxwuxrRjerYka+tnK20VW16C1Vg+i5ZOb6tWp8vcYaZtUvbhgnyWVTX15bHxs7OTCrPhzuk84eow3R4T7/5Gymj70oxKY1Vs05MS75PuPaIKNjaWQNY7QYYCmCx3cPPQJwtn760wDf+P0TlfPtwVCPRC/gJ26Kqo3SYj6GWd7ODqHkZOldr/5ow/7dcfdYQaqRhq1BsCvA0dEsHnuJ/dg5mbxrvuf0aAkHAlVQt70HO5RdCfZDbwCgf2PhIwDm6HrtjX3ik+othOdTfp/TlcjawLy+L28ubO+RlM21/q3NKAQbQzd6lizS+cVLN1rO1IaX2Cvw3RGrn9Wyp0rizK5hv++sXDzvHIKbQnBkr5u/gNrrVwjRqJRfkCf8nF0pvUrJircIwXQtHidTwlwGGQSHAesV2JFt6OzZqsi5cE2u60gb22nCroii5VlDv0/Pg1p7kFtkujcrtL+Tl3WKu7yJ9S1ipm3zNCAq1s7zU8S8SnJKI9LVfaS01XQj1s7+prqI7UutkMi6cV4tK69j064qMJL6fC9QhUifzMNRTedhm3NKdXJjiQYESZI4XoEltTRyIuxUrCS+hurNUj0Q9UNtvax6DZ6/sjY3U3SvNRs7iSOR/rr30qcAfuMvb/ovgMBI/VO+ENyqZEh1iTZlMaq/a/uxxrXfzaqGYVvBXQDvePTmBsAPKiceBnju2Mx8t3jwUt06beeNnxmSzMKR+TMaa2g5uall95W1fm3Tfb+XNxmxa9MrSEX2/+2D+57V539NCb61k+CcEuwF+rmkewfjdqTe94oAfcO5SYBrq6N3AbyzMPzXAF/hhw8oM/EyOyQD8LMj1wBwbVFUgMfKZ/Qsa/iq9hswS5W/eK5MILHeSI++0GMuYF+RjFgu+r6047vHnbGZGp9KOsn+zT+76Z0AxWt6n+jUmZ6z5tehi7XVhanJ/lleKL1WeosieamfbR0C8PrMDEBuSLoJRXWx5Z6Xmu4VoGjOfo3v9JZpxGJrD8yKzrUwKD/OGzeJTW62ItcGWxtbVQVNLWV7FfmgV/38XDwPUEmOXg/w5B2z851zVUbsxVZ0T01MubZuEkesVD419x8AfjA2D5ArBoMAQZ/UW4UFGdlzo1+eE7+tndX4beDfIMpqblCvg66kLmJrrQ1tqk0N1Ll4zdh1ctO9kVOLu5i3YP3hdrFBOhqmctikrm23GpmNXaM1CJM4BHtbrg21kYCn3SmFGI165QoyZrlB9ScTN2fl+W78NtFWcJFmTf1+JTW54P0UHPLsyiw4fxP49hHo18ZWSGOWuIGsU9xaJTYVxTIHjgkKG0eTziGyu8dG5cRR8/WOaNxWs6SmkYpS6SK/bfuMWakdQc7v/1gdgE72pYYkkXORhDb6e3oc22yW14wzI3bN1XltukXKV6rHxHG06ju70s8Py6XDop/SJ+hI64omqacIXta+GKxg90/bJUnud7YmetiDx6RP142jG50qmWKuV213nBG7NonVlcT2XaID2MW09KmamJkFePtfvfa7AIV1+dt0jk8kV6XV1YuZpJybdTU9KxMHXXZzb9P9DTaea9WM+0tS33X4rKgLrx+W2tqNheGsMnFtEJsm1BNdqyX1rY9cNwYwsnH4j6Sjm3ezkKf60ihRm+stLxeWpIpP/NWJhliNlnWfvZ7uShpj3Lad+SD0O3vZ7C9Jn9pDcycd5VBW53XJiNXolSV0fPfmURnJ4bt0yO8E6B0MRzv1BYltzdJG4vy2zuha25JkG8L6RXsf5vy21rtA58G4cVbqllx9XLSaMPWnNeeXaF8wqxzPBfJCrKrDrF/BJSDWGfTb/2FjEWCod92fSJDH/0AnoY2qSLvrGpWy1HuLtW9vR4WUgHLKtnqLDPESpFq/N1aluYLUqURf1r5xSUWCAYmnvRRb+W+rX74ZIBjybgCINJ6cRJJF9to/qYzYi16ZGGplYgtgsLD+LoCBTb0fASifaLQ6da9tQjWuumwhSqtzt4FlDGnaeEZuHDTRtrPNuirArQ5CO1+kCU4S0z2G4EuXTi+UOxoLBr8BUHoIyU4/YD6ul9mR2mvGy4hdI/rYfKeu1Ub6Paum8tyKPpO8Ol3q4hpH4xJa8ZzIffv7U2dra2PNdQVtggNnLxr79a3F9mXwjZPrO5GLdgIM1flzgPyCu59XRuwlJzZyVyhtnauOY6LktBaswttf3gpriWqXdpxWMw3J3PnzycYsUhqAS7Dd52u2WtIaCrnfDX1DTny1HWdNXF3D5rOS4Zj5jG2mkfwpAO/hU0DnnonOX5QRe/GiW4JMWsndVEJb5dh5vh1v9ZZZd5Wufum1i3IV1FS97tsk0b1WINA3xOoYt7Osnru70lxNMgOHKqc1virEXjcgtbubBqWvVq+fd+747a/bamMl6V0/FzIbuxaI1aQmzTkhoHa8RWe0qq0T8Jcg0k+ZVv0FiPrgFULTyvClWmK3a1z1RudaQuJQruhKsJI4tY9CoGfPyRScqkgnuFNG4qrFRi9ud/xpuu36me39vVZqaavHhYSefq97XX+775XMniaR/lV+TtWF1g2tG6dGNezT7j/DgbNXywWXEKRM8N55qb4uapHspr5R7V7fp1qu9mQRd/Z2CcPQ6cRxvDLneDuLNMdfdo4jI/YirryMQ2i7gs+mJVVsVxDJtG/7Y6kSpjUfO3oC6xWGBX9lclnGtbXW355riDs535SA62BeiL2hb716IfIX+QUbB253O4rVBktVUOift58WmaJ7jWZp2+sPrfPK9YU5x6+txnsAzEnzi5pBGO6scW37wbrfgHkF1VUpzLK21F681BBjWfFqkhFo8jUAL/armqn4HV2Y2RZ0dqUWk9V5XVZdjHDUgnEkKDQq0bMASRDfL97D2RcBBjeOHRGvoB3uMp0yPWsLbc5otWpYTWqpF3qhE2dt1aPnAU5/kkmAsXv5ddXR3gvgjfFWJc3PiL2cKhNJZMgrp1v/AxCb1nsBvnHP/uc6s7i/MLllGGCwvQ9xWwktNrkoAdCoGde1E1tLjW+vE57yLlQ9+OqkLz5200b5SW65kWcApnfE/w6w4V5+V2+r6lxmF3FG7JqsTNTj/yo/fkj/+RDAgUlED/ivbg1CsSBhLs/06J7ZgVXCiE0uR98GqCzU3guw/vX94wD5/mASoDZn9zT0wm6Vh7Rtsxtla7ViZ/fOC/CLHfKmH9foxbggfPIhvsT5tToZsWvSK7CE2jqvX9otIzs1PhV32sSxdTqcNYljNcvRt8TUJvcDnBkYfA5g+p6XWgDv+uLNXiqKZZza2MDqaO3u9G6fq0hJJfFWpqbtNUqwtaHjqZrDKeLMK7ic1IZTuJWI6WP+sLQz6hlo/TbA1+/Zv6fz9S2T9Dp9CGyE3xh3L2/dNbNSF2lLeU5sZ6ElKYY4MV2zsh1RtpXpDvNTEpoRe6nVhiy5+9GBufZeGV1qb0dKL8eaK3JqXe0eLVXd8/DgCanW/slJ2VfgmpzEU7doh+PYcwO3JtVz0NOklolMa4n4hyHrCXN1744kyOyWwUnX3m59bKszaHbHi31HhMy9e487e7nYDTjsThptG2prA5QBuwd4VVMUJjZlibMirYlbaoWjdo4it7odtjJiLxtiBaWJ7rNperf677y0T2xmT+LkvOwOGI1Y9v5u78yhVd85vcV63DIApxtnPYDj5dICQK3WeiNAT+y/G8D45m4Ar8BAJzoJKzvrZ8Re6TvQRaqhyqvfGgfioLY1/oHobcO8W2d1pCbKlRNVzaJqaMNT4cFcUzVVf5E8CMD7+RzA+th/n/Z0eVBtcJARmxF7QSNoOmtujTqiQVF7Ji5wCGChUp0BOOWf3QawUKvLXoe60UGoNtnutDHSJ9cp2Vn/ESlkOeUlHwcY+VDyj+oSbGYF4qwZsVcLsXYIfd2II66LbYzmky9ILso8AJDcu7BTdmkKtgHkfcldGUzoxGs9Ia5UTam/7FZ1qgosfUp+CdA+sxp7QWbEXvbE/ji1No+pALROJo8CnIyS+8TBxd37O7W7kfFM7PSzKsg9Jy21kcfPIS+tCvQvJqkZsZctsU+7ubST+5LPInFPZ+9vximkxFItJxaVF//T5sbisnlWbG38Yb1ema57y11cQjNirzivYIqmztY5tYHC5IhLtl+UwbZV2eYMz4qJjj6mSpZn6B6tSsh6dHP1duO8BIObAKz/EG/T3FZf13z/CmdTM2IzYlf4uEwIzYi9aom9TAnNiL1Ix/8DXKU+B0hGQskAAAAASUVORK5CYII=",
+    lilac: "data:image/png;base64,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"
+  };
+  function mcImg(src, h) {
+    return '<span class="mc photo" style="height:' + h + '%"><img src="' + src + '" alt=""></span>';
+  }
+
+  function pair(real, mc) { return '<span class="art">' + real + mc + "</span>"; }
+
+  var flowers = [
+    {
+      id: "rose", name: "Rose", meaning: "Love, said the classic way.",
+      art: pair(svg(stem(56) + ring(6, 13, 15, 17, "#B3124F", 0) + ring(5, 11, 12, 12, "#D81E69", 36) + ring(4, 8, 9, 7, "#EE4B86", 18) +
+        '<circle cx="50" cy="42" r="5" fill="#F77FAA"/><path d="M46 42 a4 4 0 1 1 4 4" stroke="#B3124F" stroke-width="1.4" fill="none" stroke-linecap="round"/>'), mcImg(IMG.poppy, 84))
+    },
+    {
+      id: "tulip", name: "Tulip", meaning: "Perfect love, and being cared for.",
+      content: {
+        type: "notes",
+        heading: "things i notice",
+        items: [
+          { t: "You list me on your profile", d: "Right there on your profile, next to the things you love most. I noticed, and it's one of my favorite little things about you." },
+          { t: "You post about me", d: "On Facebook and on Instagram, you share me like I'm something worth showing. I see every post, and it makes me proud to be yours." },
+          { t: "It makes you sad when I don't post you", d: "I've noticed you get sad that I don't really post you anywhere. I never want you to feel less seen. You deserve to be shown off, and I'm working on it. This page is a start." },
+          { t: "You match with me", d: "Whatever I'm doing, whatever mood I'm in, you're right there with me. It feels like we're on the same wavelength through everything." },
+          { t: "You always play with me", d: "I ask, and you say yes. Every game, every silly idea, every time. I never know how to say how much that means, so thank you for always playing with me." },
+          { t: "You're patient with me", d: "I'm not always good at showing what I feel. You don't make me feel bad about it. You stay, and you wait for me to catch up." },
+          { t: "We feel like a team", d: "Between matching each other and saying yes to everything, it feels like we're always on the same side." },
+          { t: "You remember little things about me", d: "The small stuff I say without thinking, you hold onto. It makes me feel like I'm worth paying attention to." },
+          { t: "You make time for me even when you're busy", d: "Busy days don't make me an afterthought. You still find a way to show up for me, and I notice every time." },
+          { t: "You get excited when we have something planned", d: "When there's something for us to look forward to, you light up. It makes me look forward to it even more." },
+          { t: "You try to understand me even when I'm difficult to understand", d: "I know I'm not always easy to read. You keep trying anyway, and you never give up on me." },
+          { t: "You let me be myself around you", d: "I don't have to put on anything with you. Quiet, silly, or somewhere in between, it's okay." },
+          { t: "You make ordinary moments feel special", d: "A normal day turns into something to look forward to the moment you join in. Nothing feels boring when I'm doing it with you." }
+        ]
+      },
+      art: pair(svg(stem(66) + '<path d="M33 30 C30 52 38 64 50 66 C62 64 70 52 67 30 C60 38 55 34 50 24 C45 34 40 38 33 30Z" fill="#FFFFFF" stroke="#D3C6E6" stroke-width="0.8"/>' +
+        '<path d="M42 66 C36 50 42 34 50 22 C58 34 64 50 58 66 C54 68 46 68 42 66Z" fill="#F3F0F8" stroke="#D3C6E6" stroke-width="0.8"/>'), mcImg(IMG.tulip, 100))
+    },
+    {
+      id: "sunflower", name: "Sunflower", meaning: "Adoration, and always turning toward you.",
+      content: {
+        type: "letter",
+        greeting: "happy monthsarry, baby,",
+        paras: [
+          "I know this isn't too much, but I want to make our day special for the both of us, so I prepared this little HTML website for you ;3",
+          "I know I've never really been a show-off in our relationship. I'm quiet about the things I feel, and I know that has made you sad sometimes. Maybe starting now, that can change. You deserve to be shown off, and I want to learn how to do that for you.",
+          "Thank you for being patient with me. Thank you for choosing me, for loving me out loud, for putting me on your profile and in your posts, and for staying even when I'm quiet. I'm grateful for every day with you, the ordinary ones most of all.",
+          "You are loved. You are enough exactly as you are, and you are worth every bit of showing off. Anyone who gets to see you is lucky, and I'm the luckiest, because I get to be yours.",
+          "Being with you feels calm and warm, like the sun finally coming out. Every month with you is one I'd choose all over again.",
+          "Thank you for another month. I'm looking forward to so many more, and I promise to keep showing you how much you mean to me, in more ways than one. I love you."
+        ]
+      },
+      art: pair(svg(stem(56) + ring(18, 5, 13, 21, "#F5B301", 0) + ring(18, 4.5, 11, 17, "#FFCB2E", 10) +
+        '<circle cx="50" cy="42" r="13" fill="#5B3A1E"/><circle cx="50" cy="42" r="8.5" fill="#74491F"/>'), mcImg(IMG.sunflower, 90))
+    },
+    {
+      id: "daisy", name: "Daisy", meaning: "Loyal love, simple and honest.",
+      content: {
+        type: "form",
+        heading: "questions for us",
+        intro: "answer however you like. when you're done, tap the button at the bottom to copy everything, then send it to me.",
+        qs: [
+          { q: "do you still feel like playing minecraft together?", k: "short" },
+          { q: "how would you rate our relationship from 1\u201310?", k: "rate" },
+          { q: "when do you feel most loved by me?", k: "para" },
+          { q: "what's something you'd love for us to experience together?", k: "short" },
+          { q: "magaling ba ako mag-ML XD", k: "short" },
+          { q: "what promises have i missed?", k: "para" },
+          { q: "when was the last time you got mad at me, and why?", k: "para" },
+          { q: "what's one thing you wish we did more often?", k: "short" },
+          { q: "what's your favorite memory of us?", k: "para" },
+          { q: "is there something you've been wanting to tell me but haven't found the right time to?", k: "para" },
+          { q: "what's one thing about our relationship that you hope never changes?", k: "short" },
+          { q: "what's something new you'd like us to try together?", k: "short" },
+          { q: "do you think we've changed since we first met? how?", k: "para" },
+          { q: "what's one little thing i do that makes your day better?", k: "short" },
+          { q: "if we could spend an entire day together, how would you want it to go?", k: "para" }
+        ]
+      },
+      art: pair(svg(stem(52) + ring(14, 4.5, 13, 17, "#FFFFFF", 0, ' stroke="#D3C6E6" stroke-width="0.8"') + '<circle cx="50" cy="42" r="8" fill="#F6C026"/>'), mcImg(IMG.daisy, 100))
+    },
+    {
+      id: "lavender", name: "Lavender", meaning: "Devotion, and a calm place to land.",
+      content: {
+        type: "comfort",
+        heading: "for when you need me",
+        intro: "tap the button whenever you need a little something. take your time with each one, i'll be right here.",
+        btn: "i need a little love",
+        msgs: [
+                "lost again baby:(? it's okay, love. i know how frustrating losing can be, especially when you've been trying your best. take a little breather, okay? i'm still proud of you regardless of how the game went.",
+                "hey, my love. whatever happened today, i hope you know that you did enough. you don't have to accomplish something extraordinary to deserve rest and affection. i'm always going to appreciate you, even on your most ordinary days.",
+                "if things are getting a little overwhelming, please take your time. you don't have to figure everything out tonight. breathe for a moment and remember that you have someone who's willing to listen to you.",
+                "i hope you're being gentle with yourself today. i know you sometimes expect a lot from yourself, but you deserve the same patience you give everyone else. please don't forget to take care of my favorite person.",
+                "baby, you don't have to pretend you're okay around me. you can tell me when something hurts, when you're upset, or when you simply don't feel like talking. i'll always want to understand what's going on in your little world.",
+                "having a bad day doesn't make you a difficult person to love. you're allowed to be upset, frustrated, tired, and everything in between. none of those feelings make you any less deserving of love.",
+                "i wish i could give you a hug right now. i'd hold you close and let you forget about everything for a little while. i hope this message can remind you that you're loved, even from afar.",
+                "whatever you're worrying about right now, let's take it one step at a time. you don't need to solve everything all at once. i'm here, and we can figure things out together.",
+                "hey pretty girl, have you eaten properly today? please drink some water too. i know these are little things, but your well-being matters so much to me.",
+                "i'm proud of you for making it through another day. even if it wasn't particularly productive or exciting, you still made it. that alone is worth giving yourself a little credit for.",
+                "please don't compare yourself to other people, sweetheart. everyone has their own pace, and yours is just as valid. there's so much about you that makes you special, including the things you might overlook.",
+                "if you ever feel like you're falling behind, remember that life isn't a race. you have plenty of time to grow, learn, and discover new things. i'll be happy to witness every little step along the way.",
+                "i hope you never feel like you have to earn my affection. you don't need to be extra sweet, entertaining, or happy all the time. i love having you around simply because you're you.",
+                "did something upset you today, baby? you can tell me about it whenever you're ready. i'll listen, even if you need to explain the same thing a hundred times.",
+                "i know some days are harder than others. on those days, i hope you remember that tomorrow gives you another opportunity to try again. please don't be too hard on yourself tonight.",
+                "even when we aren't talking, you're still someone i think about throughout my day. sometimes something random reminds me of you, and suddenly i find myself smiling. it's lovely having someone like you in my life.",
+                "i hope you know how much i appreciate your presence. you make even the simplest conversations something i look forward to. i wouldn't trade our little moments for anything.",
+                "if you're feeling insecure today, come here for a second. i wish you could see yourself through my eyes, even just for a moment. maybe then you'd understand why i find so many little things about you lovable.",
+                "you are allowed to have moments where you don't like yourself very much. i'll never expect you to be confident every single day. just remember that your difficult moments don't define your entire being.",
+                "hey baby, don't forget that you're worth listening to. your thoughts matter, your feelings matter, and your experiences matter. you never have to make yourself smaller just to be heard.",
+                "i hope you're getting enough rest, my love. you've spent so much time doing things throughout the day, and you deserve a moment to slow down. please let yourself relax without feeling guilty.",
+                "remember that one bad conversation doesn't determine the future of our relationship. we can misunderstand each other sometimes, and that's okay. what matters to me is that we're willing to listen, communicate, and keep learning.",
+                "if you're having trouble sleeping, imagine us somewhere quiet together. maybe we're lying under the stars, talking about absolutely nothing. i'd happily spend an entire night like that with you.",
+                "i want you to know that you can always tell me when something is bothering you. i'd rather understand what's happening inside your head than have you carry everything alone. we'll work through things with patience.",
+                "even if you feel like you haven't done anything worthwhile today, i'm still glad you're here. your existence isn't something that needs to be justified through achievements. you deserve to enjoy life, too.",
+                "baby, you don't need to apologize for having feelings. you're human, and sometimes things get overwhelming. i'll always try to understand where you're coming from.",
+                "i hope you never question whether you can come to me when you're sad. you can tell me the messy version, the unfiltered version, and the version that doesn't quite make sense yet. i'll do my best to understand.",
+                "if today made you feel unwanted, i hope this reminds you that you're important to me. i enjoy having you in my life, and i appreciate the time we spend together. you mean a great deal to me.",
+                "please don't let one mistake convince you that you're incapable of doing something right. everyone makes mistakes, sweetheart. you can learn from them without being cruel to yourself.",
+                "i know we can't always be together physically, but i hope you still feel my affection through the little things i do. every message, every game, and every conversation means something to me. i'm grateful we get to share these moments.",
+                "do you remember how we started playing together? it's funny how something as simple as a game can become such a special part of someone's life. i hope we get to make countless more memories together.",
+                "if you're feeling lonely, you can always message me. even if you don't have anything interesting to say, i'd still love to hear from you. we can talk about the most random things until you feel a little better.",
+                "sweetheart, please remember that you're not a burden for needing reassurance. sometimes people need to hear that they're loved, and there's absolutely nothing wrong with that. i'm happy to remind you whenever you need it.",
+                "i hope you never feel pressured to hide your bad days from me. i want to know you beyond your happiest moments. there's room for every version of you in this relationship.",
+                "if something didn't go according to plan, that's alright. plans change, days get messy, and sometimes things simply don't work out. we'll have other opportunities to make better memories.",
+                "i wish i could take away whatever is making you sad right now. unfortunately, i can't fix everything for you, but i can listen, stay beside you, and remind you that you don't have to face everything alone. i hope that's enough for tonight.",
+                "hey, have you smiled today? i hope something made you laugh, even if it was something incredibly stupid. if nothing did, allow me to volunteer as your personal source of nonsense.",
+                "i love hearing about the little things that happen in your day. you don't have to save the interesting stories for me. even the most mundane details are worth hearing when they're coming from you.",
+                "please don't think that we need to have an exciting day every single time we spend time together. sometimes i'd be perfectly happy doing absolutely nothing with you. your company is already something i enjoy.",
+                "if you're ever worried about our future, let's remember that we don't need every answer right now. we still have so much to experience and learn. i'd like us to take our time and grow together.",
+                "baby, i hope you recognize how much effort you've been putting into everything. sometimes progress is so gradual that you barely notice it happening. give yourself some credit for continuing even when things get difficult.",
+                "if you feel like crying, then cry. you don't have to suppress everything just to appear strong. take your time, sweetheart, and remember that tomorrow is another day.",
+                "i hope you know that i genuinely enjoy getting to know you. even after all our conversations, there's still so much about you i'd love to discover. i want to keep learning about the person you are.",
+                "sometimes i wonder how many little memories we're going to make in the coming years. more games, more conversations, more late-night moments, and more things we'll eventually look back on. i look forward to experiencing them with you.",
+                "if you're questioning whether you're doing enough in our relationship, let's talk about it. i don't expect perfection from either of us. i want us to understand each other and make an effort in ways that matter.",
+                "you deserve to be treated with kindness, especially by yourself. please don't let a difficult day change how you see your worth. you're still the same wonderful person i care about.",
+                "hey baby, remember that you can have your own space. you can spend time with your friends, enjoy your hobbies, and do things independently. i'll always want you to have a life that makes you happy.",
+                "i hope we never stop being curious about each other. i want to keep asking questions, sharing stories, and discovering little things we didn't know before. there's something beautiful about continuously getting to know someone you love.",
+                "if you're reading this because you miss me, then the feeling is mutual. i wish i could teleport to wherever you are and spend some time with you. until then, consider this a little hug delivered through a screen.",
+                "whatever happens, please remember that we are two people learning how to love each other. we'll have good days, difficult days, and days where we don't quite understand each other. i hope we continue choosing patience, honesty, and kindness as we figure things out.",
+                "i hope you never feel like you need to compete for my attention. i want you to feel secure enough to be yourself around me. you deserve a relationship where you feel heard, appreciated, and respected.",
+                "hey pretty girl, i just wanted to remind you that you're loved. you don't need a special occasion to hear it, and you don't need to ask for it every time. i'll gladly remind you through my words and actions.",
+                "if you're having one of those days where everything feels wrong, let's make today a little smaller. focus on getting through the next hour, then the next. you don't have to carry tomorrow's worries today.",
+                "i hope you continue pursuing the things that make you happy. i'll always be interested in hearing about your interests, your little projects, and the things you're excited about. i want to see you grow into whoever you want to become.",
+                "sometimes i wish you could borrow my perspective for a day. you'd see just how many little things about you make me smile. perhaps you'd finally understand why i keep finding new reasons to adore you.",
+                "if we ever have a disagreement, please remember that your feelings are still important to me. i'll want to hear your side, explain mine, and find a way forward together. i'd rather have an honest conversation than leave you wondering where we stand.",
+                "baby, you don't have to be okay immediately. healing, processing, and understanding your feelings can take time. i'll respect that, and i hope you give yourself permission to take it.",
+                "i hope you know that i'm grateful for the effort you put into us. even the small things, like checking on me or asking me to play, mean something. i notice them, and i appreciate them more than you might think.",
+                "imagine us in our little minecraft world, building a house somewhere peaceful. maybe we'd spend hours decorating it, gathering resources, and arguing about where everything should go. honestly, i'd love every second of that with you.",
+                "you are allowed to be imperfect, to make mistakes, to change your mind, and to have difficult days. i hope you never forget that you deserve patience and tenderness, especially during the moments when you struggle to give those things to yourself."
+        ]
+      },
+      art: (function () {
+        var s = stem(40), i, y;
+        for (i = 0; i < 9; i++) {
+          y = 12 + i * 6;
+          s += '<ellipse cx="45" cy="' + y + '" rx="4.2" ry="2.8" fill="' + (i % 2 ? "#A98BE6" : "#8E6BD6") + '" transform="rotate(-30 45 ' + y + ')"/>';
+          s += '<ellipse cx="55" cy="' + (y + 3) + '" rx="4.2" ry="2.8" fill="' + (i % 2 ? "#8E6BD6" : "#A98BE6") + '" transform="rotate(30 55 ' + (y + 3) + ')"/>';
+        }
+        return pair(svg(s + '<ellipse cx="50" cy="8" rx="3" ry="4" fill="#A98BE6"/>'), mcImg(IMG.lilac, 100));
+      })()
+    }
+  ];
+
+  var wrap = document.getElementById("flowers");
+  var panel = document.getElementById("panel");
+  var pArt = document.getElementById("panel-art");
+  var pTitle = document.getElementById("panel-title");
+  var pMeaning = document.getElementById("panel-meaning");
+  var pSlot = document.getElementById("panel-slot");
+  var pContent = document.getElementById("panel-content");
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text) n.textContent = text;
+    return n;
+  }
+  var answers = {};
+  try { answers = JSON.parse(localStorage.getItem("monthsarry-daisy") || "{}") || {}; } catch (e) { answers = {}; }
+  function saveAnswers() { try { localStorage.setItem("monthsarry-daisy", JSON.stringify(answers)); } catch (e) {} }
+  function answersText(c) {
+    var out = "daisy answers\n";
+    c.qs.forEach(function (q, i) {
+      var a = (answers[i] || "").trim();
+      out += "\n" + (i + 1) + ". " + q.q + "\n" + (a ? (q.k === "rate" ? a + "/10" : a) : "(skipped)") + "\n";
+    });
+    return out;
+  }
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).then(function () { return true; }, function () { return legacyCopy(text); });
+    }
+    return Promise.resolve(legacyCopy(text));
+  }
+  function legacyCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.cssText = "position:fixed;top:0;left:0;opacity:0;";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function renderForm(c) {
+    pContent.appendChild(el("h4", "", c.heading));
+    var wrapF = el("div", "qa-wrap");
+    wrapF.appendChild(el("p", "qa-intro", c.intro));
+    var ol = el("ol", "qa");
+    c.qs.forEach(function (q, i) {
+      var li = el("li");
+      var id = "qa-" + i;
+      var lab = el("label", "q", q.q);
+      lab.id = id + "-l";
+      li.appendChild(lab);
+      if (q.k === "rate") {
+        var grid = el("div", "rate");
+        grid.setAttribute("role", "group");
+        grid.setAttribute("aria-labelledby", id + "-l");
+        for (var n = 1; n <= 10; n++) {
+          (function (n) {
+            var b = el("button", "", String(n));
+            b.type = "button";
+            b.setAttribute("aria-pressed", String(answers[i]) === String(n) ? "true" : "false");
+            b.addEventListener("click", function () {
+              var same = String(answers[i]) === String(n);
+              answers[i] = same ? "" : String(n);
+              Array.prototype.forEach.call(grid.children, function (x) { x.setAttribute("aria-pressed", String(answers[i]) === x.textContent ? "true" : "false"); });
+              saveAnswers();
+            });
+            grid.appendChild(b);
+          })(n);
+        }
+        li.appendChild(grid);
+      } else {
+        var f;
+        if (q.k === "para") { f = el("textarea"); f.rows = 4; }
+        else { f = el("input"); f.type = "text"; f.autocomplete = "off"; }
+        f.id = id;
+        f.maxLength = 3000;
+        f.value = answers[i] || "";
+        lab.setAttribute("for", id);
+        f.addEventListener("input", function () { answers[i] = f.value; saveAnswers(); });
+        li.appendChild(f);
+      }
+      ol.appendChild(li);
+    });
+    wrapF.appendChild(ol);
+    var row = el("div", "copy-row");
+    var btn = el("button", "copy-btn", "copy my answers");
+    btn.type = "button";
+    var note = el("span", "copy-note");
+    note.setAttribute("role", "status");
+    var fb = el("textarea", "fallback");
+    fb.readOnly = true; fb.rows = 8; fb.hidden = true;
+    fb.setAttribute("aria-label", "Your answers, ready to copy");
+    var timer = 0;
+    btn.addEventListener("click", function () {
+      var text = answersText(c);
+      copyText(text).then(function (ok) {
+        clearTimeout(timer);
+        if (ok) {
+          fb.hidden = true;
+          note.textContent = "copied! now paste it in a message to me";
+          timer = setTimeout(function () { note.textContent = ""; }, 4000);
+        } else {
+          fb.value = text; fb.hidden = false; fb.focus(); fb.select();
+          note.textContent = "couldn't copy automatically. select all and copy this";
+        }
+      });
+    });
+    row.appendChild(btn); row.appendChild(note);
+    wrapF.appendChild(row); wrapF.appendChild(fb);
+    pContent.appendChild(wrapF);
+  }
+  /* lavender: a calm message deck. 2 taps per 10 seconds so nothing gets skimmed past */
+  function renderComfort(c) {
+    var MAX_CLICKS = 2, WINDOW_MS = 10000;
+    pContent.appendChild(el("h4", "", c.heading));
+    var box = el("div", "comfort");
+    box.appendChild(el("p", "qa-intro", c.intro));
+    var card = el("blockquote", "comfort-card", "\u2026");
+    card.setAttribute("aria-live", "polite");
+    card.classList.add("empty");
+    box.appendChild(card);
+    var row = el("div", "copy-row");
+    var btn = el("button", "copy-btn", c.btn);
+    btn.type = "button";
+    var note = el("span", "copy-note");
+    note.setAttribute("role", "status");
+    row.appendChild(btn); row.appendChild(note);
+    box.appendChild(row);
+    pContent.appendChild(box);
+
+    var deck = [], clicks = [], tick = 0, shown = 0, last = -1;
+    function shuffle() {
+      deck = c.msgs.map(function (_, i) { return i; });
+      for (var i = deck.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1)), t = deck[i]; deck[i] = deck[j]; deck[j] = t;
+      }
+      if (deck[deck.length - 1] === last && deck.length > 1) { deck.unshift(deck.pop()); }
+    }
+    function prune(now) { clicks = clicks.filter(function (t) { return now - t < WINDOW_MS; }); }
+    function update() {
+      var now = Date.now();
+      prune(now);
+      if (clicks.length >= MAX_CLICKS) {
+        var wait = Math.ceil((WINDOW_MS - (now - clicks[0])) / 1000);
+        btn.disabled = true;
+        note.textContent = "breathe for a moment, " + wait + "s";
+        if (!tick) { tick = setInterval(update, 250); }
+      } else {
+        btn.disabled = false;
+        note.textContent = "";
+        if (tick) { clearInterval(tick); tick = 0; }
+      }
+    }
+    btn.addEventListener("click", function () {
+      var now = Date.now();
+      prune(now);
+      if (clicks.length >= MAX_CLICKS) { update(); return; }
+      clicks.push(now);
+      if (!deck.length) { shuffle(); }
+      last = deck.pop();
+      card.classList.remove("empty");
+      card.textContent = c.msgs[last];
+      card.classList.remove("swap"); void card.offsetWidth; card.classList.add("swap");
+      shown++;
+      update();
+    });
+  }
+  function renderContent(c) {
+    pContent.textContent = "";
+    if (!c) { pContent.hidden = true; return; }
+    pContent.hidden = false;
+    if (c.type === "notes") {
+      pContent.appendChild(el("h4", "", c.heading));
+      var ul = el("ul", "notes");
+      c.items.forEach(function (it) {
+        var li = el("li");
+        li.appendChild(el("span", "t", it.t));
+        li.appendChild(el("p", "d", it.d));
+        ul.appendChild(li);
+      });
+      pContent.appendChild(ul);
+    } else if (c.type === "comfort") {
+      renderComfort(c);
+    } else if (c.type === "form") {
+      renderForm(c);
+    } else if (c.type === "letter") {
+      var box = el("div", "letter");
+      box.appendChild(el("p", "greet", c.greeting));
+      c.paras.forEach(function (p) { box.appendChild(el("p", "body", p)); });
+      pContent.appendChild(box);
+    }
+  }
+
+  pArt.innerHTML = flowers[0].art;
+
+  flowers.forEach(function (f) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "flower-btn";
+    b.id = "flower-" + f.id;
+    b.setAttribute("aria-pressed", "false");
+    b.innerHTML = f.art + "<span>" + f.name + "</span>";
+    b.addEventListener("click", function () { select(f.id); });
+    wrap.appendChild(b);
+  });
+
+  function select(id) {
+    var f = flowers.filter(function (x) { return x.id === id; })[0];
+    Array.prototype.forEach.call(wrap.children, function (btn) {
+      btn.setAttribute("aria-pressed", btn.id === "flower-" + id ? "true" : "false");
+    });
+    pArt.innerHTML = f.art;
+    pTitle.textContent = f.name;
+    pMeaning.textContent = f.meaning;
+    renderContent(f.content);
+    if (f.content) {
+      pSlot.hidden = true;
+    } else {
+      pSlot.hidden = false;
+      pSlot.textContent = "This one is still being made. Check back soon.";
+    }
+  }
+
+var mcAlts = [
+    "Orange character with white hair standing by a lake in a pine forest",
+    "Mining in a dark cave with a pickaxe and a shield",
+    "Two players inside a stone village house with villagers",
+    "Standing inside a stone and wood arena, looking up at the sky",
+    "Two players on a snowy village roof",
+    "Two players on a dirt path beside chests and furnaces",
+    "Two players near a wooden village house",
+    "Inside a village house with a purple bed and villagers",
+    "A player in diamond armor walking down a village path",
+    "Looking up through the water at a boat",
+    "A player riding a white horse across grassland, with a pig nearby",
+    "A night sky seen from a high village roof",
+    "A cake sitting on a stump inside a village house",
+    "A close-up of blocks in pink and purple tones",
+    "A player standing in a cave next to dirt and water",
+    "A player standing on top of a wooden building",
+    "Two players in diamond armor in a stone room with torches",
+    "The same stone room from a slightly different angle",
+    "Two players on a copper platform inside a trial chamber",
+    "A close-up of a player in a trial chamber holding a weapon",
+    "A character with bear ears standing in a wooden house next to a purple bed",
+    "A dark cave with glowing ore on the wall and a diamond pickaxe in hand",
+    "Two players standing on a wooden building at night in the rain",
+    "A player in diamond armor among tall golden plants beside green water in a cave",
+    "Two players with dark faces in diamond armor in a red cave hallway",
+    "Three players meeting in a rainy forest, one wearing gold armor",
+    "Looking down a deep shaft in a dark stone cave, with chests nearby",
+    "A player in diamond armor in front of a wall of green ore blocks inside a house",
+    "Two players in diamond armor standing on a village path",
+    "A cat-faced character in the snow, up close",
+    "Two players on top of a stone wall with snow and ice behind them",
+    "A player in diamond armor running across snow at sunset",
+    "A cat-faced player up close in a green meadow",
+    "A white couch on a wooden floor, with a player in a gold crown hovering in the sky above",
+    "A night scene on a wooden platform with a swarm of silverfish and bubbles in the air",
+    "A player in diamond armor behind a crafting table, a furnace and an ender chest at night",
+    "A player in diamond armor beside a strange teal tree with a snowy shore behind",
+    "A player in purple armor beside a cauldron and a purple-armored horse in a village",
+    "A pink-haired player in purple armor holding two blocks in a stone storage room",
+    "A wooden potion room with shelves of bottles and a copper statue on the counter",
+    "A player in diamond armor in a small stone house with copper statues",
+    "A player in diamond armor in a white tent-like build with hay bales and berry bushes",
+    "A close-up of a pink-haired player in purple armor beside a village house"
+  ];
+  var mlAlts = [
+    "The Mobile Legends classic lobby with two players waiting to start a game",
+    "The Mobile Legends Ranked Legend 8-Ban lobby with two players in the room",
+    "The first seconds of a Mobile Legends match, with everyone still at the spawn fountain"
+  ];
+  /* a short note for each screenshot, shown over the picture when it is opened */
+  var CAPS = {
+    "s01": "our first picture together<3 pareho pa skin natin that time xD",
+    "s02": "our first diamonds rin! one of many, i really loved that cave because there were so much diamonds",
+    "s03": "us in our lovely villager area, i really loved how we built this<3",
+    "s04": "w a l l, what else to i say, its an awesome wall that we still HAVENT finished xD",
+    "s05": "rooftop picture! its nice to look back sometimes and see how far we've come",
+    "s06": "just looking at it then feels so weird, now we have such a cool looking minecraft base",
+    "s07": "i second this, it looksss so different",
+    "s08": "the villagers are looking oddly at you 0-0",
+    "s09": "You happy. I happy",
+    "s10": "POV: I'm a shokoy and i saw a goddess moving through the sea",
+    "s11": "Some travelling, ang dami nating nakitang villages dyan omg",
+    "s12": "Even beneath a sky adorned with a thousand brilliant stars, my eyes will always wander toward you, as though you are the only light they have ever known.",
+    "s13": "Our first cake, this is a core memory for me, you looked so happy obtaining it<3",
+    "s14": "Careful, you might just get a kiss xD",
+    "s15": "This seems so intimate (I loved every moment with you there)",
+    "s16": "Us building our storage area<3 idk nakalat parin chests natin till now di naman nagagamit...",
+    "s17": "Remember this? From a familiar world that might not exist xD",
+    "s18": "+ just to add:P it took me alot of sneaky to be able to build this, its my first ever surprise to you, i hope you loved it!",
+    "s19": "two brave players conquering a trial chamber, hell yeah",
+    "s20": "Boi looks so tuff +++100000 aura",
+    "s21": "the time we finished our house, coziest house i've ever made",
+    "s22": "i never knew that our cave was that big, it literally spanned hundreds of blocks!!! and i got to travel it with you<3",
+    "s23": "GOSH this ghast was a genuine pain to get xD, but atleast it was worth it, right?",
+    "s24": "Real precautious there, baby xD",
+    "s25": "Matching heads?",
+    "s26": "oh hey look!!! the time we finally got another player in the server<3 it was the days the server was genuinely so fun",
+    "s27": "The time we finally finished digging that hole, ang galing mo mag clutch non baby<3",
+    "s28": "Yaman, may throne na sya",
+    "s29": "Your favourite picture! You thought i forgot about it, didnt you?",
+    "s30": "Just a happy girl playing with his happy boyfriend<3",
+    "s31": "the time when we are working on the massive trading hall na",
+    "s32": "THIS LOOKED SO SCARY IDK WHY enfioboewbgfwef",
+    "s33": "happi happi happi",
+    "s34": "CUSHIONS, kaso madomi, ang lapit kasi sa mobs smh",
+    "s35": "the first server incident xD",
+    "s36": "MAJOR MILESTONE, the time we finally got netherite on our armor<3",
+    "s37": "worst tree ever. genuinely",
+    "s38": "Burple horse, Burple girlfren",
+    "s39": "She's genuinely flexing infront of me, little does she know im the richest man in the world already, because i have her<3",
+    "s40": "\"Kuya, isang yakult nga\"",
+    "s41": "Dyan pala sila kumukuha ng Yakult",
+    "s42": "T e n t",
+    "s43": "Im staring you right down at your face, can't you see me?",
+    "m01": "the time we actually matched<3",
+    "m02": "idk what screenshot this is but it looks cool",
+    "m03": "hell yeah"
+  };
+
+  var foldersEl = document.getElementById("folders");
+  var drawersEl = document.getElementById("drawers");
+  var viewer = document.getElementById("viewer");
+  var vImg = document.getElementById("viewer-img");
+  var vCount = document.getElementById("v-count");
+  var vClose = document.getElementById("v-close");
+  var vCap = document.getElementById("v-cap");
+  var vText = document.getElementById("v-text");
+  var vFrame = document.getElementById("v-frame");
+  var shotIndex = 0;
+  var lastFocus = null;
+  var current = null;
+
+  /* two textures for each chest: closed and open */
+  function pix(rows, pal, cls) {
+    var w = rows[0].length, h = rows.length, out = "";
+    rows.forEach(function (row, y) {
+      var x = 0;
+      while (x < w) {
+        var c = row.charAt(x);
+        if (c === ".") { x++; continue; }
+        var x2 = x;
+        while (x2 < w && row.charAt(x2) === c) x2++;
+        out += '<rect x="' + x + '" y="' + y + '" width="' + (x2 - x) + '" height="1" fill="' + pal[c] + '"/>';
+        x = x2;
+      }
+    });
+    return '<svg class="' + cls + '" viewBox="0 0 ' + w + " " + h + '" shape-rendering="crispEdges" aria-hidden="true" focusable="false">' + out + "</svg>";
+  }
+  var woodPal = { D: "#3A2310", h: "#C9955A", B: "#A8743A", b: "#8A5A28", s: "#6B4420", M: "#9A9A9A", m: "#E2E2E2", i: "#2B1A0B", G: "#F2A93B", g: "#FFD98A" };
+  var violetPal = { D: "#1F1A42", h: "#9A8BEA", B: "#7461D0", b: "#5B4AB0", s: "#41358A", M: "#D9B44A", m: "#FFE08A", i: "#150F2A", G: "#6FC8F5", g: "#CFF1FF" };
+  var chestClosed = [
+    "................",
+    "................",
+    "................",
+    "..DDDDDDDDDDDD..",
+    ".DhhhhhhhhhhhhD.",
+    ".DhBBBBBBBBBBhD.",
+    ".DBBBBBBBBBBBBD.",
+    ".DBBBBBBBBBBBBD.",
+    ".DBBBBBMMBBBBBD.",
+    ".DDDDDDmmDDDDDD.",
+    ".DbbbbbmmbbbbbD.",
+    ".DbbbbbbbbbbbbD.",
+    ".DbbbbbbbbbbbbD.",
+    ".DbbbbbbbbbbbbD.",
+    ".DssssssssssssD.",
+    "..DDDDDDDDDDDD.."
+  ];
+  var chestOpen = [
+    "................",
+    "..DDDDDDDDDDDD..",
+    ".DhhhhhhhhhhhhD.",
+    ".DhBBBBBBBBBBhD.",
+    ".DBBBBBBBBBBBBD.",
+    ".DDDDDDDDDDDDDD.",
+    "..DiiiiiiiiiiD..",
+    "..D" + "iGgGgGgGgi" + "D..",
+    ".DhhhhhhhhhhhhD.",
+    ".DbbbbbmmbbbbbD.",
+    ".DbbbbbmmbbbbbD.",
+    ".DbbbbbbbbbbbbD.",
+    ".DbbbbbbbbbbbbD.",
+    ".DbbbbbbbbbbbbD.",
+    ".DssssssssssssD.",
+    "..DDDDDDDDDDDD.."
+  ];
+
+  /* the folders: key is the note prefix, file is the image prefix */
+  var folders = [
+    { name: "minecraft", alts: mcAlts, key: "s", file: "", pal: woodPal },
+    { name: "mobile legends", alts: mlAlts, key: "m", file: "m", pal: violetPal }
+  ];
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function keyOf(f, i) { return f.key + pad(i + 1); }
+  function noteFor(f, i) { return CAPS[keyOf(f, i)] || ""; }
+
+  folders.forEach(function (f, fi) {
+    var wrap = document.createElement("div");
+    wrap.className = "folder";
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "chest-btn";
+    btn.setAttribute("aria-expanded", "false");
+    btn.setAttribute("aria-controls", "drawer-" + fi);
+    btn.setAttribute("aria-label", "Open the " + f.name + " chest");
+    btn.innerHTML = '<span class="art-wrap">' + pix(chestClosed, f.pal, "tex-closed") + pix(chestOpen, f.pal, "tex-open") + "</span>";
+    var lab = document.createElement("div");
+    lab.className = "folder-label";
+    lab.textContent = f.name;
+    var cnt = document.createElement("div");
+    cnt.className = "folder-count";
+    cnt.textContent = f.alts.length + (f.alts.length === 1 ? " screenshot" : " screenshots");
+    wrap.appendChild(btn); wrap.appendChild(lab); wrap.appendChild(cnt);
+    foldersEl.appendChild(wrap);
+
+    var dr = document.createElement("div");
+    dr.className = "drawer";
+    dr.id = "drawer-" + fi;
+    dr.inert = true;
+    var inner = document.createElement("div");
+    inner.className = "drawer-inner";
+    var title = document.createElement("p");
+    title.className = "drawer-title";
+    title.textContent = f.name;
+    var slots = document.createElement("div");
+    slots.className = "slots";
+    inner.appendChild(title); inner.appendChild(slots); dr.appendChild(inner);
+    drawersEl.appendChild(dr);
+    f.wrap = wrap; f.btn = btn; f.drawer = dr;
+
+    f.alts.forEach(function (alt, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "slot-btn";
+      b.style.setProperty("--i", String(i));
+      b.setAttribute("aria-label", "Open " + f.name + " screenshot " + (i + 1) + " of " + f.alts.length + ": " + alt);
+      var im = document.createElement("img");
+      im.src = "img/t" + f.file + pad(i + 1) + ".jpg";
+      im.alt = "";
+      im.width = 480; im.height = 300;
+      im.decoding = "async";
+      b.appendChild(im);
+      b.addEventListener("click", function () { openShot(f, i); });
+      slots.appendChild(b);
+    });
+
+    function toggle() {
+      var open = !wrap.classList.contains("open");
+      folders.forEach(function (g) {
+        var on = open && g === f;
+        g.wrap.classList.toggle("open", on);
+        g.drawer.classList.toggle("open", on);
+        g.drawer.inert = !on;
+        g.btn.setAttribute("aria-expanded", on ? "true" : "false");
+        g.btn.setAttribute("aria-label", (on ? "Close the " : "Open the ") + g.name + " chest");
+      });
+    }
+    btn.addEventListener("click", toggle);
+    lab.addEventListener("click", toggle);
+  });
+
+  function renderNote() {
+    var t = noteFor(current, shotIndex);
+    vText.textContent = t;
+    vCap.hidden = t.trim().length === 0;
+  }
+
+  function showShot(i) {
+    var n = current.alts.length;
+    shotIndex = (i + n) % n;
+    vImg.src = "img/" + current.file + pad(shotIndex + 1) + ".jpg";
+    vImg.alt = current.alts[shotIndex];
+    vCount.textContent = (shotIndex + 1) + " / " + n;
+    vFrame.classList.remove("hide-note");
+    renderNote();
+  }
+  function openShot(f, i) {
+    lastFocus = document.activeElement;
+    current = f;
+    showShot(i);
+    viewer.hidden = false;
+    document.body.style.overflow = "hidden";
+    vClose.focus();
+  }
+  function closeShot() {
+    viewer.hidden = true;
+    document.body.style.overflow = "";
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  document.getElementById("v-prev").addEventListener("click", function () { showShot(shotIndex - 1); });
+  document.getElementById("v-next").addEventListener("click", function () { showShot(shotIndex + 1); });
+  vClose.addEventListener("click", closeShot);
+  vImg.addEventListener("click", function () { vFrame.classList.toggle("hide-note"); });
+  viewer.addEventListener("click", function (e) { if (e.target === viewer || e.target.tagName === "FIGURE") closeShot(); });
+  document.addEventListener("keydown", function (e) {
+    if (viewer.hidden) return;
+    if (e.key === "Escape") closeShot();
+    else if (e.key === "ArrowLeft") showShot(shotIndex - 1);
+    else if (e.key === "ArrowRight") showShot(shotIndex + 1);
+  });
+
+  /* every 5 seconds all flowers swap between drawn and block-pixel */
+  document.body.setAttribute("data-mode", "real");
+  setInterval(function () {
+    document.body.setAttribute("data-mode", document.body.getAttribute("data-mode") === "real" ? "mc" : "real");
+  }, 5000);
+  /* nothing to see here: poke the chicken 5 times, collect the egg, hold the screen to throw it */
+  (function () {
+    var EGG_SRC = "img/egg.png";
+    var chicken = document.getElementById("chicken");
+    var zone = document.getElementById("drop-zone");
+    var hotbar = document.getElementById("hotbar");
+    var slot = document.getElementById("mc-slot");
+    var slotImg = document.getElementById("slot-img");
+    var slotCnt = document.getElementById("slot-cnt");
+    var hint = document.getElementById("hotbar-hint");
+    if (!chicken || !zone || !hotbar) { return; }
+    var pokes = 0, eggs = 0, MAX_EGGS = 16, ground = 0, inflight = 0, tipShown = false, hintShown = false, lastIdle = -1, lastThrow = 0, hintTimer = 0;
+    var spot = document.getElementById("egg-spot");
+    var eggPos = [];
+
+    /* sounds: tries sfx/<name>.ogg, then .mp3, plus the wiki's own file names */
+    var exts = ["mp3", "ogg"];
+    var idleA = null;
+    function sfx(name) {
+      var isIdle = name.indexOf("idle") === 0;
+      if (isIdle && idleA && !idleA.paused && !idleA.ended) { return; }
+      var names = [name, "Chicken_" + name, "Chicken " + name], tries = [];
+      names.forEach(function (n) { exts.forEach(function (x) { tries.push("sfx/" + n + "." + x); }); });
+      var i = 0;
+      (function next() {
+        if (i >= tries.length) { return; }
+        var a, failed = false;
+        function fail() { if (!failed) { failed = true; next(); } }
+        try { a = new Audio(tries[i++]); } catch (e) { return; }
+        a.volume = 0.8;
+        if (isIdle) { idleA = a; }
+        a.addEventListener("error", fail, { once: true });
+        var p = a.play();
+        if (p && p.catch) { p.catch(function (err) { if (err && err.name !== "NotAllowedError") { fail(); } }); }
+      })();
+    }
+
+    /* fly a little egg along an arc between two screen points */
+    function fly(from, to, size, dur, arc, spins, done) {
+      var img = document.createElement("img");
+      img.className = "proj"; img.src = EGG_SRC; img.alt = ""; img.width = size; img.height = size;
+      document.body.appendChild(img);
+      var t0 = performance.now();
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      function frame(now) {
+        var t = Math.min(1, (now - t0) / dur);
+        var x = from.x + (to.x - from.x) * t;
+        var y = from.y + (to.y - from.y) * t - arc * 4 * t * (1 - t);
+        img.style.transform = "translate(" + (x - size / 2) + "px," + (y - size / 2) + "px) rotate(" + (reduce ? 0 : spins * 360 * t) + "deg)";
+        if (t < 1) { requestAnimationFrame(frame); } else { img.remove(); if (done) { done(); } }
+      }
+      requestAnimationFrame(frame);
+    }
+    function center(node) { var r = node.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
+
+    function splat(x, y) {
+      var cols = ["#F2E6C0", "#FFFFFF", "#D8C28A", "#C2AA6B"];
+      for (var i = 0; i < 9; i++) {
+        var s = document.createElement("div");
+        s.className = "shard";
+        s.style.background = cols[i % cols.length];
+        s.style.left = x - 3 + "px"; s.style.top = y - 3 + "px";
+        document.body.appendChild(s);
+        var ang = Math.PI * 2 * (i / 9) + Math.random() * 0.5, dist = 22 + Math.random() * 26;
+        var anim = s.animate([
+          { transform: "translate(0,0)", opacity: 1 },
+          { transform: "translate(" + Math.cos(ang) * dist + "px," + (Math.sin(ang) * dist + 14) + "px)", opacity: 0 }
+        ], { duration: 520, easing: "cubic-bezier(.2,.7,.4,1)" });
+        anim.onfinish = (function (n) { return function () { n.remove(); }; })(s);
+      }
+    }
+
+    function showHint() {
+      hint.hidden = false;
+      clearTimeout(hintTimer);
+      hintTimer = setTimeout(function () { hint.hidden = true; }, 9000);
+    }
+
+    function layEgg() {
+      ground++;
+      var drop = el("div", "drop");
+      var pick = el("button", "pick");
+      pick.type = "button";
+      pick.setAttribute("aria-label", "Pick up the egg");
+      var bob = el("div", "bob");
+      var spin = el("div", "spin");
+      var img = document.createElement("img");
+      img.src = EGG_SRC; img.alt = ""; img.draggable = false;
+      spin.appendChild(img); bob.appendChild(spin); pick.appendChild(bob);
+      drop.appendChild(pick);
+      drop.appendChild(el("div", "shadow"));
+      /* land somewhere around the chicken's feet; sometimes right on top of another egg so they pile up */
+      var pos, o;
+      if (eggPos.length && Math.random() < 0.4) {
+        o = eggPos[Math.floor(Math.random() * eggPos.length)];
+        pos = { x: Math.max(12, Math.min(88, o.x + (Math.random() * 8 - 4))), b: Math.min(84, o.b + 10 + Math.random() * 8) };
+      } else {
+        pos = { x: 12 + Math.random() * 76, b: Math.random() * 40 };
+      }
+      eggPos.push(pos);
+      var wrap2 = el("div", "egg-slot");
+      wrap2._pos = pos;
+      wrap2.style.left = pos.x + "%";
+      wrap2.style.bottom = pos.b + "px";
+      wrap2.style.zIndex = String(10 + eggPos.length);
+      drop.style.setProperty("--sx", ((50 - pos.x) / 100 * spot.clientWidth) + "px");
+      wrap2.appendChild(drop);
+      spot.appendChild(wrap2);
+      pick.addEventListener("click", function () { collect(wrap2, img); });
+    }
+
+    function collect(drop, img) {
+      if (!drop.parentNode) { return; }
+      var pi = eggPos.indexOf(drop._pos);
+      if (pi >= 0) { eggPos.splice(pi, 1); }
+      ground--; inflight++;
+      var from = center(img);
+      drop.remove();
+      hotbar.hidden = false;
+      var to = center(slot);
+      fly(from, to, 56, 480, 40, 1, function () {
+        inflight--;
+        eggs = Math.min(MAX_EGGS, eggs + 1);
+        renderSlot();
+        slot.classList.remove("pulse"); void slot.offsetWidth; slot.classList.add("pulse");
+        document.body.classList.add("has-egg");
+        if (!hintShown) { hintShown = true; showHint(); }
+      });
+      /* the message only appears once she has picked an egg up, and stays below the chicken */
+      if (!tipShown) {
+        tipShown = true;
+        zone.appendChild(el("p", "mc-tip", "check back in a month baby<3 there might be something new here xD, i love you"));
+      }
+    }
+
+    function renderSlot() {
+      var has = eggs > 0;
+      slotImg.src = EGG_SRC;
+      slotImg.hidden = !has;
+      slotCnt.hidden = !has;
+      slotCnt.textContent = String(eggs);
+      slot.setAttribute("aria-label", has ? "Hotbar slot: " + eggs + (eggs === 1 ? " egg" : " eggs") : "Hotbar slot: empty");
+      if (!has) { document.body.classList.remove("has-egg"); }
+    }
+
+    function throwEgg(x, y) {
+      if (eggs < 1) { return; }
+      eggs--;
+      lastThrow = Date.now();
+      renderSlot();
+      hint.hidden = true;
+      var from = center(slot);
+      var d = Math.hypot(x - from.x, y - from.y);
+      fly(from, { x: x, y: y }, 28, Math.min(900, 450 + d * 0.6), 60 + d * 0.15, 2, function () {
+        splat(x, y);
+      });
+    }
+
+    function blocked(t) { return t && t.closest && t.closest("input, textarea, select, .viewer"); }
+
+    /* hold anywhere to throw (touch / pen) */
+    var holdTimer = 0, sx = 0, sy = 0;
+    function cancelHold() { clearTimeout(holdTimer); holdTimer = 0; }
+    document.addEventListener("pointerdown", function (e) {
+      if (eggs < 1 || e.pointerType === "mouse" || blocked(e.target)) { return; }
+      sx = e.clientX; sy = e.clientY;
+      cancelHold();
+      holdTimer = setTimeout(function () { holdTimer = 0; throwEgg(sx, sy); }, 450);
+    });
+    document.addEventListener("pointermove", function (e) {
+      if (holdTimer && Math.hypot(e.clientX - sx, e.clientY - sy) > 12) { cancelHold(); }
+    });
+    ["pointerup", "pointercancel", "pointerleave"].forEach(function (n) { document.addEventListener(n, cancelHold); });
+    window.addEventListener("scroll", cancelHold, { passive: true });
+
+    /* right-click throws (computer); also swallows the long-press menu on Android */
+    document.addEventListener("contextmenu", function (e) {
+      if (blocked(e.target)) { return; }
+      if (eggs > 0) { e.preventDefault(); throwEgg(e.clientX, e.clientY); }
+      else if (Date.now() - lastThrow < 900) { e.preventDefault(); }
+    });
+    /* Q throws it at the middle of the screen, like dropping an item */
+    document.addEventListener("keydown", function (e) {
+      if ((e.key === "q" || e.key === "Q") && eggs > 0 && !blocked(e.target)) {
+        throwEgg(window.innerWidth / 2, window.innerHeight / 2);
+      }
+    });
+
+    chicken.addEventListener("click", function () {
+      chicken.classList.remove("poke"); void chicken.offsetWidth; chicken.classList.add("poke");
+      pokes++;
+      if (pokes >= 5 && eggs + ground + inflight < MAX_EGGS) {
+        pokes = 0;
+        sfx("plop");
+        layEgg();
+      } else {
+        var n;
+        do { n = 1 + Math.floor(Math.random() * 3); } while (n === lastIdle);
+        lastIdle = n;
+        sfx("idle" + n);
+      }
+    });
+  })();
+
+})();
+</script>
+
+
+</body></html>
